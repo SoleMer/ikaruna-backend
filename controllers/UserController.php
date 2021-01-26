@@ -24,9 +24,10 @@ class UserController {
     }
 
     public function verify($params = []){
-        if(!empty($params[':EMAIL']) && !empty($params[':PASS'])){
-            $email = $params[':EMAIL'];
-            $pass = $params[':PASS'];
+        $user = json_decode(file_get_contents("php://input"));
+        if(!empty($user->email) && !empty($user->password)){
+            $email = $user->email;
+            $pass = $user->password;
             $userDb = $this->model->getUserByEmail($email);
 
         }
