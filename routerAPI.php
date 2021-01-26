@@ -10,20 +10,19 @@ require_once 'controllers/QuestionController.php';
 $router = new Router();
 
 //$router->addRoute('recurso', 'verbo', 'controlador', 'funcion');
-//$router->addRoute('comments/product/:ID', 'GET', 'ApiController', 'getComments'); //obtener todos los comentarios de un producto
 
 $router->addRoute('user', 'POST', 'UserController', 'add');
 $router->addRoute('user/:ID', 'DELETE', 'UserController', 'delete');
-$router->addRoute('user', 'GET', 'UserController', 'getAll');
+$router->addRoute('user', 'GET', 'UserController', 'getAllToAdmin');
 $router->addRoute('user/:ID', 'PUT', 'UserController', 'edit');
 
 $router->addRoute('login', 'POST', 'UserController', 'verify');
 $router->addRoute('logout', 'DELETE', 'UserController', 'logout');
 
 $router->addRoute('shift', 'POST', 'ShiftController', 'add');
-$router->addRoute('shift/:ID', 'PUT', 'ShiftCntroller', 'edit');
+$router->addRoute('shift/:ID', 'PUT', 'ShiftController', 'confirm');
 $router->addRoute('shift/:ID','DELETE', 'ShiftController', 'delete');
-$router->addRpute('shift', 'GET', 'ShiftController', 'getAll');
+$router->addRoute('shift', 'GET', 'ShiftController', 'getAllToAdmin');
 
 $router->addRoute('therapy', 'GET', 'TherapyController', 'getAll');
 $router->addRoute('therapy', 'POST', 'TherapyController', 'add');
@@ -36,5 +35,5 @@ $router->addRoute('workshop/:ID', 'DELETE', 'WorkshopCntroller', 'delete');
 $router->addRoute('workshop/:ID', 'PUT', 'WorkshopController', 'edit');
 
 $router->addRoute('question', 'POST', 'QuestionController', 'add');
-$router->addRoute('question', 'GET', 'QuestionController', 'getAll');
+$router->addRoute('question', 'GET', 'QuestionController', 'getAllToAdmin');
 ?>

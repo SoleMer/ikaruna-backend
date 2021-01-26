@@ -3,12 +3,12 @@
 class UserModel extends Model {
 
     public function save($username,$email,$phone,$password){
-        $query = $this->db->prepare('INSERT INTO user (username, emai, phone, password, admin) VALUES (?, ?, ?, ?, ?)');
+        $query = $this->db->prepare('INSERT INTO user (username, email, phone, password, admin) VALUES (?, ?, ?, ?, ?)');
         return $query->execute([$username, $email, $phone, $password, 0]);
     }
     
-    public function deleteUser($id){
-        $query = $this->db->prepare('DELETE FROM `user` WHERE `id_user`= ?');
+    public function delete($id){
+        $query = $this->db->prepare('DELETE FROM `user` WHERE `id`= ?');
         return $query->execute([$id]);
     }
 
@@ -17,7 +17,7 @@ class UserModel extends Model {
         return $query->execute([$email,$phone,$id]);
     }
     
-    public function getUsers(){
+    public function getAll(){
         $query = $this->db->prepare('SELECT * FROM user');
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);

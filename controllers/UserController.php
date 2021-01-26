@@ -2,12 +2,12 @@
 
 include_once('models/UserModel.php');
 
-class UserController {
+class UserController extends Controller{
 
-    private $model;
+    private $model = new UserModel;
 
-    public function __construct(){
-        $this->model = new UserModel;
+    public function __construct() {
+        $this->__construct($this->model);
     }
 
     public function login($user) {
@@ -35,7 +35,7 @@ class UserController {
         $response = password_verify($pass, $hash);
         
         if($response == true){
-            login($userDb);
+            $this->login($userDb);
         }
         return $response;
     }
@@ -57,21 +57,16 @@ class UserController {
         $this->model->save($user,$email,$phone,$hash);
         
         $userDb = $this->model->getUserByEmail($email);
-        login($userDb);
+        $this->login($userDb);
 
         return true;
     }  
-
-    public function delete($params = []){
-        $this->model->deleteUser($params[':ID']);
-        getAll();
-    }
 
     public function edit($params = []) {
         $user = json_decode(file_get_contents("php://input"));
         if (!empty($user->password)) {
             $hash = $user->password;
-            $userDb = this->model->getUserById($params[':ID']);
+            $userDb = $this->model->getUserById($params[':ID']);
             $response = password_verify($userDb->password, $hash);
 
             if ($response) {
@@ -89,11 +84,6 @@ class UserController {
                 $this->model->editUser($userDb->id, $email, $phone);
             }
         }
-    }
-
-    public function getAll(){
-        $users = $this->model->getUsers();
-        return $users;
     }
 }
 
