@@ -1,13 +1,16 @@
 <?php
 
 include_once('models/ShiftModel.php');
+include_once('MessageController.php');
 
 class ShiftController extends Controller {
 
     private $model = new ShiftModel; 
+    private $sender;
 
     public function __construct() {
         $this->__construct($this->model);
+        $this->sender = new MessageController;
     }
 
     public function add() {
@@ -19,11 +22,15 @@ class ShiftController extends Controller {
                 $therapy = $shift->therapy;  
                 $therapist = $shift->therapist;  
                 $status = AuthHelper::checkAdmin();
-                //checkAdmin() return 1 if user is admin, and 0 if it isn't.
-                //status of shift is 0 if it wasn't confirmed by an admin yet,
+                //checkAdmin() return 1 if user is admin, and 0 if he isn't.
+                //the status of the shift is 0 if it wasn't confirmed by an admin yet,
                 //and 1 if the shift was confirmed or added by an admin.
 
                 $this->model->save($date,$time,$patient,$therapy,$therapist,$status);
+
+                if ($status == 0) {
+                    $this->sender->askShift($shift);
+                }
             }
     }
 
