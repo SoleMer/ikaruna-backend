@@ -1,6 +1,7 @@
 <?php
  
 include_once('models/QuestionModel.php');
+include_once('senders/Sender.php');
 
 class QuestionController extends Controller {
 
@@ -9,7 +10,7 @@ class QuestionController extends Controller {
 
     public function __construct() {
         $this->__construct($this->model);
-        $this->sender = new NotificationController;
+        $this->sender = new Sender;
     }
 
     public function add() {
