@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-01-2021 a las 17:22:10
+-- Tiempo de generación: 27-01-2021 a las 18:58:13
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -21,6 +21,19 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `ikaruna`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `notification`
+--
+
+CREATE TABLE `notification` (
+  `id` int(11) NOT NULL,
+  `subject` varchar(100) NOT NULL,
+  `message` varchar(256) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -96,6 +109,12 @@ CREATE TABLE `workshop` (
 --
 
 --
+-- Indices de la tabla `notification`
+--
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `question`
 --
 ALTER TABLE `question`
@@ -128,6 +147,12 @@ ALTER TABLE `workshop`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `question`
