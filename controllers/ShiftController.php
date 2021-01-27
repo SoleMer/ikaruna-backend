@@ -1,7 +1,7 @@
 <?php
 
 include_once('models/ShiftModel.php');
-include_once('MessageController.php');
+include_once('NotificationController.php');
 
 class ShiftController extends Controller {
 
@@ -10,7 +10,7 @@ class ShiftController extends Controller {
 
     public function __construct() {
         $this->__construct($this->model);
-        $this->sender = new MessageController;
+        $this->sender = new NotificationController;
     }
 
     public function add() {

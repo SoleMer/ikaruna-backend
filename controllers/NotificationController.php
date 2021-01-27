@@ -3,7 +3,7 @@
 include_once('models/UserModel.php');
 include_once('models/TherapyModel.php');
 
-class MessageController extends Controller{
+class NotificationController extends Controller{
     //class to send messages notifying users and administrators
 
     private $model = new UserModel;
@@ -38,6 +38,18 @@ class MessageController extends Controller{
             mail($addresseeOne, '', $msg);
             mail($addresseeTwo, '', $msg);
         }
+    }
+
+    public function sendEmailQuestion($question) {
+        $user = $this->model->getUserById($question->user_id);
+        $msg = $user->id .', con e mail '. $user->email .', preguntó: '.
+            $question->text
+        ;
+
+        $addressee = 'soledadmerino.1994@gmail.com';
+        //another hardcoded
+        mail($addressee, 'Ikaruna question', $msg);
+        //TODO: inform the user if their question was submitted
     }
 }
 
