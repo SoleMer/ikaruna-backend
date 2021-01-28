@@ -5,11 +5,11 @@ include_once('senders/Sender.php');
 
 class QuestionController extends Controller {
 
-    private $model = new QuestionModel;
+    private $model;
     private $sender;
 
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new QuestionModel;
         $this->sender = new Sender;
     }
 

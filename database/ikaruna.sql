@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-01-2021 a las 18:58:13
+-- Tiempo de generación: 27-01-2021 a las 21:30:37
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -75,6 +75,17 @@ CREATE TABLE `therapy` (
   `description` varchar(500) NOT NULL,
   `therapist_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `therapy`
+--
+
+INSERT INTO `therapy` (`id`, `name`, `description`, `therapist_id`) VALUES
+(1, 'Reiki Presencial', 'El Reiki es una terapia alternativa que...', 0),
+(2, 'Reiki a distancia. Larga duración.', 'Tiene las mismas características que el Reiki presencial, pero se practica a distancia.', 1),
+(3, 'Reiki a distancia. Corta duración.', 'Tiene las mismas características que el Reiki presencial,pero se practica a distancia y con menos intensidad.', 1),
+(4, 'Masaje Venusiano', 'Masaje en rostro, cabeza y parte del pecho. Es un verdadero lifting facial que ayuda...', 2),
+(5, 'Lectura de Tarot Terapéutico', '22 arcanos', 0);
 
 -- --------------------------------------------------------
 
@@ -170,7 +181,7 @@ ALTER TABLE `shift`
 -- AUTO_INCREMENT de la tabla `therapy`
 --
 ALTER TABLE `therapy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `user`

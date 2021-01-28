@@ -4,10 +4,10 @@ include_once('models/WorkshopModel.php');
 
 class WorkshopController extends Controller{
 
-    private $model = new WorkshopModel;
+    private $model;
 
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new WorkshopModel;
     }
 
     public function add() {

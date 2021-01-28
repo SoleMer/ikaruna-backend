@@ -1,12 +1,6 @@
 <?php
 
 class Controller {
-
-    private $model;
-
-    public function __construct($model) {
-        $this->model = $model;
-    }
         
     
     //return true if the user logged is admin
@@ -23,12 +17,13 @@ class Controller {
             return $this->model->getAll();
         }
     }
-
+/*
     public function getAll() {
-        $therapies = $this->model->getTherapies();
-        return $therapies;
+        $objs = $this->model->getAll();
+        echo('Estoy en el controlador');
+        return $objs;
     }
-
+*/
     public function delete($params = []) {
         if ($this->check()) {
             $this->model->delete($params[':ID']);

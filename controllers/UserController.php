@@ -1,13 +1,13 @@
 <?php
-
+include_once('controllers/Controller.php');
 include_once('models/UserModel.php');
 
 class UserController extends Controller{
 
-    private $model = new UserModel;
-
+    //private $model = new UserModel;
+    private $model;
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new UserModel;
     }
 
     public function login($user) {

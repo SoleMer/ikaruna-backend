@@ -3,14 +3,14 @@
 include_once('models/UserModel.php');
 include_once('models/TherapyModel.php');
 
-class Sender extends Controller{
+class Sender{
     //class to send messages notifying users and administrators
 
-    private $model = new UserModel;
+    private $model;
     private $therapyModel;
 
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new UserModel;
         $this->therapyModel = new TherapyModel;
     }
 

@@ -2,10 +2,10 @@
 
 class NotificationController extends Controller{
     
-    private $model = new NotificationModel;
+    private $model;
 
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new NotificationModel;
     }
 
     public function add($params = []) {

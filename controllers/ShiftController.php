@@ -2,14 +2,15 @@
 
 include_once('models/ShiftModel.php');
 include_once('senders/Sender.php');
+include_once('controllers/Controller.php');
 
 class ShiftController extends Controller {
 
-    private $model = new ShiftModel; 
+    private $model; 
     private $sender;
 
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new ShiftModel;
         $this->sender = new Sender;
     }
 

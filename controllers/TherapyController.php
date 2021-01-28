@@ -1,13 +1,25 @@
 <?php
 
 include_once('models/TherapyModel.php');
+include_once('response/Response.php');
 
 class TherapyController extends Controller{
 
-    private $model = new TherapyModel;
+    private $model;
+    private $response;
 
     public function __construct() {
-        $this->__construct($this->model);
+        $this->model = new TherapyModel();
+        $this->response= new Response();
+    }
+
+    public function getAll() {
+        $therapies = $this->model->getAll();
+        if ($therapies) {
+            $this->response->response($therapies, 200);
+        } else {
+            $this->response->response(null, 404);
+        }
     }
 
     public function addTherapy() {
