@@ -27,7 +27,21 @@ class UserController extends Controller{
             $_SESSION['USERNAME'] = $user->username;
             $_SESSION['EMAIL'] = $user->email;
             $_SESSION['ADMIN'] = $user->admin;
-            
+            /*
+                $token = $this->generateToken($_SESSION['ID_USER]);
+                if($token != 0){
+                    $reply = [
+                        'status' => 'ok',
+                        'msg' => 'Sesión iniciada',
+                        'token' => $token
+                    ];
+                } else {
+                    $reply = [
+                        'status' => 'error',
+                        'msg' => 'No se pudo guardar el token',
+                    ];
+                }
+            */
             $reply = [
                 'status' => 'ok',
                 'msg' => 'Sesión iniciada',
@@ -135,6 +149,21 @@ class UserController extends Controller{
             }
         }
     }
+/*
+    private function generateToken($id_user) {
+        $bool = true;
+        $token = bin2hex(openssl_random_pseudo_bytes(16,$bool));
+        $date = date('D, d M Y H:i:s');
+        $status = "active";
+        $query = $this->tokenModel->save($id_user,$token,$status,$date);
+        $verify = parent::nowQuery($query);
+        if ($verify) {
+            return $token;
+        } else {
+            return 0;
+        }
+    }
+    */
 }
 
 ?>
