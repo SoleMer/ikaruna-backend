@@ -2,6 +2,7 @@
 include_once('controllers/Controller.php');
 include_once('models/UserModel.php');
 include_once('response/Response.php');
+include_once('helpers/auth.helper.php');
 
 class UserController extends Controller{
 
@@ -14,7 +15,8 @@ class UserController extends Controller{
     }
 
     public function login($user) {
-        if (AuthHelper::checkLoggedIn()) {
+        $logged = AuthHelper::checkLoggedIn();
+        if ($logged) {
             $reply = [
                 'status' => 'error',
                 'msg' => 'Ya hay una sesión activa. Cerrar sesión para iniciar una nueva'
@@ -31,7 +33,7 @@ class UserController extends Controller{
                 'msg' => 'Sesión iniciada',
             ];
         }
-        $this->response->response($reply, 200);
+        return $reply;
     }
     
     public function logout() {
@@ -39,21 +41,31 @@ class UserController extends Controller{
         session_destroy();
     }
 
-    public function verify($params = []){
+    public function verify(){
         $user = json_decode(file_get_contents("php://input"));
         if(!empty($user->email) && !empty($user->password)){
             $email = $user->email;
             $pass = $user->password;
             $userDb = $this->model->getUserByEmail($email);
 
-        }
-        $hash = $userDb->password;
-        $response = password_verify($pass, $hash);
+            $hash = $userDb->password;
+            $match = password_verify($pass, $hash);
         
-        if($response == true){
-            $this->login($userDb);
+            if($match){
+                $reply = $this->login($userDb);
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'El usuario o la contraseña son incorrectos.'
+                ];
+            }
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Faltan datos obligatorios'
+            ];
         }
-        return $response;
+        $this->response->response($reply, 200);
     }
 
     public function add(){
@@ -64,7 +76,6 @@ class UserController extends Controller{
                     'status' => 'error',
                     'msg' => 'Las contraseñas no coinciden',
                 ];
-                $this->response->response($reply, 200);
             }
             else{
                 $email = $user->email;
@@ -78,20 +89,18 @@ class UserController extends Controller{
                     $success = $this->model->save($username,$email,$phone,$hash);
                     if ($success) {
                         $userDb = $this->model->getUserByEmail($email);
-                        $this->login($userDb);
+                        $reply = $this->login($userDb);
                     }else {
                         $reply = [
                             'status' => 'error',
                             'msg' => 'No se pudo registrar el usuario. Por favor, intente más tarde',
                         ];
-                        $this->response->response($reply, 200);
                     }
                 } else {
                     $reply = [
                         'status' => 'error',
                         'msg' => 'El usuario ya existe en la base de datos. Iniciar sesión',
                     ];
-                    $this->response->response($reply, 200);
                 }
             }
         } else {
@@ -99,8 +108,8 @@ class UserController extends Controller{
                 'status' => 'error',
                 'msg' => 'Faltan datos obligatorios',
             ];
-            $this->response->response($reply, 200);
         }
+        $this->response->response($reply, 200);
     }
 
     public function edit($params = []) {

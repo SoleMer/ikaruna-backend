@@ -48,7 +48,6 @@ class AuthHelper {
         unset($_SESSION['USERNAME']);
         unset($_SESSION['PRIORITY']);
         session_destroy();
-        header('location:' . URLBASE . 'login');
     }
     
     public function getLoggedUserName() {
