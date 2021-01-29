@@ -6,7 +6,7 @@ include_once('response/Response.php');
 class TherapyController extends Controller{
 
     private $model;
-    private $response;
+    protected $response;
 
     public function __construct() {
         $this->model = new TherapyModel();

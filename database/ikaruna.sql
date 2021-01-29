@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-01-2021 a las 21:30:37
+-- Tiempo de generación: 29-01-2021 a las 17:13:52
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -97,7 +97,7 @@ CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `phone` int(32) NOT NULL,
+  `phone` varchar(100) NOT NULL,
   `password` varchar(256) NOT NULL,
   `admin` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -111,9 +111,17 @@ CREATE TABLE `user` (
 CREATE TABLE `workshop` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
+  `caption` varchar(100) NOT NULL,
   `contents` varchar(500) NOT NULL,
   `modality` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `workshop`
+--
+
+INSERT INTO `workshop` (`id`, `name`, `caption`, `contents`, `modality`) VALUES
+(1, 'Despertar', 'Aprendé a hacer tu sueños realidad!', 'Introducción.\r\nLey de Atracción.\r\nMantras. Qué son y cómo crearlos.\r\nSigilos. Qué son y cómo crearlos.\r\nActividades para la creación de mantras y sigilos.\r\nMeditaciones guiadas en audios.\r\nVideos explicativos.\r\nAcompañamiento permanente.', '100 % online. Una vez efectuado el pago, se envía un .pdf con todo el contenido del taller y los links a los videos y audios.');
 
 --
 -- Índices para tablas volcadas
@@ -187,13 +195,13 @@ ALTER TABLE `therapy`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `workshop`
 --
 ALTER TABLE `workshop`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,14 +1,20 @@
 <?php
 
 include_once('models/WorkshopModel.php');
+include_once('response/Response.php');
 
 class WorkshopController extends Controller{
 
-    private $model;
+    protected $model;
+    protected $response;
+
 
     public function __construct() {
         $this->model = new WorkshopModel;
+        $this->response= new Response();
     }
+
+
 
     public function add() {
         if ($this->check()) {

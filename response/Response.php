@@ -7,7 +7,8 @@ class Response {
     }
      // Devuelve un arreglo en formato JSON y maneja el codigo respuesta
      
-    public function response($data, $status) {
+     public function response($data, $status) {
+        
         header("Content-Type: application/json; charset=UTF-8");
         header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
         echo json_encode($data);

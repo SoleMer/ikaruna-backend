@@ -11,7 +11,6 @@ class AuthHelper {
         $_SESSION['ID_USER'] = $user[0]->id_user;
         $_SESSION['USERNAME'] = $user[0]->userName;
         $_SESSION['ADMIN'] = $user[0]->admin;
-        header('location:' . URLBASE . 'products');
     }
 
     public static function checkLoggedIn(){
