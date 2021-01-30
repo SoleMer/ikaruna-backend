@@ -22,29 +22,24 @@ class UserController extends Controller{
                 'msg' => 'Ya hay una sesión activa. Cerrar sesión para iniciar una nueva'
             ];
         } else {
+            $token = sha1(uniqid(rand(),true));
             session_start();
             $_SESSION['ID_USER'] = $user->id;
             $_SESSION['USERNAME'] = $user->username;
             $_SESSION['EMAIL'] = $user->email;
             $_SESSION['ADMIN'] = $user->admin;
-            /*
-                $token = $this->generateToken($_SESSION['ID_USER]);
-                if($token != 0){
-                    $reply = [
-                        'status' => 'ok',
-                        'msg' => 'Sesión iniciada',
-                        'token' => $token
-                    ];
-                } else {
-                    $reply = [
-                        'status' => 'error',
-                        'msg' => 'No se pudo guardar el token',
-                    ];
-                }
-            */
+            $_SESSION['TOKEN'] = $token;
+
+            setcookie("id_user", $user->id, time()+(60*90));
+            setcookie("username", $user->username, time()+(60*90));
+            setcookie("token", $token, time()+(60*90));
+
             $reply = [
                 'status' => 'ok',
                 'msg' => 'Sesión iniciada',
+                'token' => $token,
+                'id_user' => $_SESSION['ID_USER'],
+                'isAdmin' => $_SESSION['ADMIN']
             ];
         }
         return $reply;
@@ -149,21 +144,6 @@ class UserController extends Controller{
             }
         }
     }
-/*
-    private function generateToken($id_user) {
-        $bool = true;
-        $token = bin2hex(openssl_random_pseudo_bytes(16,$bool));
-        $date = date('D, d M Y H:i:s');
-        $status = "active";
-        $query = $this->tokenModel->save($id_user,$token,$status,$date);
-        $verify = parent::nowQuery($query);
-        if ($verify) {
-            return $token;
-        } else {
-            return 0;
-        }
-    }
-    */
 }
 
 ?>
