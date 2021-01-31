@@ -8,10 +8,12 @@ class UserController extends Controller{
 
     private $model;
     protected $response;
+    private $path;
 
     public function __construct() {
         $this->model = new UserModel;
         $this->response = new Response();
+        $this->path = "/xampp/htdocs/ikaruna-backend";
     }
 
     public function login($user) {
@@ -29,11 +31,12 @@ class UserController extends Controller{
             $_SESSION['EMAIL'] = $user->email;
             $_SESSION['ADMIN'] = $user->admin;
             $_SESSION['TOKEN'] = $token;
-
-            setcookie("id_user", $user->id, time()+(60*90));
+/*
+            setcookie("id_user", $user->id, time()+(60*90), "/", "localhost:4200", false, false);
             setcookie("username", $user->username, time()+(60*90));
+            setcookie("isAdmin", $user->admin, time()+(60*90));
             setcookie("token", $token, time()+(60*90));
-
+*/
             $reply = [
                 'status' => 'ok',
                 'msg' => 'Sesión iniciada',
