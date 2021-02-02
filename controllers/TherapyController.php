@@ -22,17 +22,13 @@ class TherapyController extends Controller{
         }
     }
 
-    public function addTherapy() {
+    public function add() {
         if ($this->check()) {
             $trp = json_decode(file_get_contents("php://input"));
             if (!empty($trp->name) && !empty($trp->description)) {
                 $name = $trp->name;
                 $description = $trp->description;
-                if (!empty($trp->therapist)) {
-                    $therapist = $trp->therapist;
-                } else {
-                    $therapist = 0;
-                }
+                $therapist = $trp->therapist_id;
                 $this->model->save($name,$description,$therapist);
             }
         }

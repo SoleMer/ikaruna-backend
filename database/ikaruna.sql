@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-01-2021 a las 17:13:52
+-- Tiempo de generación: 02-02-2021 a las 01:02:50
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -81,11 +81,11 @@ CREATE TABLE `therapy` (
 --
 
 INSERT INTO `therapy` (`id`, `name`, `description`, `therapist_id`) VALUES
-(1, 'Reiki Presencial', 'El Reiki es una terapia alternativa que...', 0),
-(2, 'Reiki a distancia. Larga duración.', 'Tiene las mismas características que el Reiki presencial, pero se practica a distancia.', 1),
-(3, 'Reiki a distancia. Corta duración.', 'Tiene las mismas características que el Reiki presencial,pero se practica a distancia y con menos intensidad.', 1),
-(4, 'Masaje Venusiano', 'Masaje en rostro, cabeza y parte del pecho. Es un verdadero lifting facial que ayuda...', 2),
-(5, 'Lectura de Tarot Terapéutico', '22 arcanos', 0);
+(1, 'Reiki Presencial', 'El Reiki es una terapia alternativa que...', 5),
+(2, 'Reiki a distancia. Larga duración.', 'Tiene las mismas características que el Reiki presencial, pero se practica a distancia.', 3),
+(3, 'Reiki a distancia. Corta duración.', 'Tiene las mismas características que el Reiki presencial,pero se practica a distancia y con menos intensidad.', 3),
+(4, 'Masaje Venusiano', 'Masaje en rostro, cabeza y parte del pecho. Es un verdadero lifting facial que ayuda...', 4),
+(5, 'Lectura de Tarot Terapéutico', '22 arcanos', 5);
 
 -- --------------------------------------------------------
 
@@ -101,6 +101,17 @@ CREATE TABLE `user` (
   `password` varchar(256) NOT NULL,
   `admin` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `email`, `phone`, `password`, `admin`) VALUES
+(3, 'Gri', 'griseldadelcastello@gmail.com', '2262485889', '$2y$10$xdkMlqlitq/rTnL.iBKidO7/ZkIOZhjcHJk2tD.vRJUuI1XlhhmOO', 1),
+(4, 'Sole', 'soledadmerino.1994@gmail.com', '2262630591', '$2y$10$wBp9qlSnzTZpIZXxGq/ZeeHJiKxpenhiu9kwCJ.1Y0ytLvbbHw/6S', 1),
+(5, 'Gri ySole', 'ikaruna@gmail.com', '123', '$2y$10$ZVF24pJOVuEQXPqUNGT16.7hqMTPfJUKoUTLWEQUC1dPiCGD4J7Uu', 1),
+(6, 'Usuario 1', 'usuario1@gmail.com', '2262345678', '$2y$10$VX2MUVgSCwHOhgybuckt3.436NWrkEoMtVMpiqR5J79FpsYq1rm2e', 0),
+(7, 'Usuario2', 'usuario2@gmail.com', '2262333333', '$2y$10$VL9xYWwgGvh5UCodoSH29uGdboFLVE/BOEomr6PLGCqPAmn5KEumG', 0);
 
 -- --------------------------------------------------------
 
@@ -195,7 +206,7 @@ ALTER TABLE `therapy`
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `workshop`

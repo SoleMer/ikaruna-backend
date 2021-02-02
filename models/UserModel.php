@@ -35,6 +35,12 @@ class UserModel extends Model {
         $query->execute(array(($email)));
         return $query->fetch(PDO::FETCH_OBJ);      
     }
+
+    public function getUsersAdmin($admin) {
+        $query = $this->db->prepare('SELECT * FROM `user` WHERE admin = ?');
+        $query->execute(array(($admin)));
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
 }
 
 ?>

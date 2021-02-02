@@ -22,7 +22,7 @@ class TherapyModel extends Model {
     }
 
     public function editTherapy($id,$name,$description,$therapist) {
-        $query = $this->db->prepare('UPDATE `therapy` SET `name`= ? , `description= ? , `therapist= ?  WHERE `id` = ?');
+        $query = $this->db->prepare('UPDATE `therapy` SET `name`= ? , `description= ? , `therapist_id= ?  WHERE `id` = ?');
         return $query->execute([$name,$description,$therapist,$id]);
     }
 

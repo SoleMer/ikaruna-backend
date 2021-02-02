@@ -15,11 +15,11 @@ class AuthHelper {
 
     public static function checkLoggedIn(){
         session_status();
-        if(!isset($_SESSION['USERNAME'])){
-            return false;
+        if(!empty($_SESSION['USERNAME'])){
+            return true;
         }
         else{
-            return true;
+            return false;
         }
     }
 

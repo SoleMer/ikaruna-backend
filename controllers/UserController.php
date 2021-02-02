@@ -8,35 +8,24 @@ class UserController extends Controller{
 
     private $model;
     protected $response;
-    private $path;
 
     public function __construct() {
         $this->model = new UserModel;
         $this->response = new Response();
-        $this->path = "/xampp/htdocs/ikaruna-backend";
     }
 
     public function login($user) {
-        $logged = AuthHelper::checkLoggedIn();
-        if ($logged) {
-            $reply = [
-                'status' => 'error',
-                'msg' => 'Ya hay una sesión activa. Cerrar sesión para iniciar una nueva'
-            ];
-        } else {
-            $token = sha1(uniqid(rand(),true));
             session_start();
+            $token = sha1(uniqid(rand(),true));
+
             $_SESSION['ID_USER'] = $user->id;
             $_SESSION['USERNAME'] = $user->username;
             $_SESSION['EMAIL'] = $user->email;
             $_SESSION['ADMIN'] = $user->admin;
             $_SESSION['TOKEN'] = $token;
-/*
-            setcookie("id_user", $user->id, time()+(60*90), "/", "localhost:4200", false, false);
-            setcookie("username", $user->username, time()+(60*90));
-            setcookie("isAdmin", $user->admin, time()+(60*90));
-            setcookie("token", $token, time()+(60*90));
-*/
+
+            setcookie("token", $token, time()+(60*90),"/");
+            
             $reply = [
                 'status' => 'ok',
                 'msg' => 'Sesión iniciada',
@@ -44,7 +33,6 @@ class UserController extends Controller{
                 'id_user' => $_SESSION['ID_USER'],
                 'isAdmin' => $_SESSION['ADMIN']
             ];
-        }
         return $reply;
     }
     
@@ -54,31 +42,42 @@ class UserController extends Controller{
     }
 
     public function verify(){
-        $user = json_decode(file_get_contents("php://input"));
-        if(!empty($user->email) && !empty($user->password)){
-            $email = $user->email;
-            $pass = $user->password;
-            $userDb = $this->model->getUserByEmail($email);
+        if (session_status() == 'PHP_SESSION_ACTIVE') {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Ya hay una sesión activa. Cerrar sesión para iniciar una nueva',
+                'token' => '0',
+                'id_user' => '0',
+                'isAdmin' => '0'
+            ];
+        } else {
 
-            $hash = $userDb->password;
-            $match = password_verify($pass, $hash);
-        
-            if($match){
-                $reply = $this->login($userDb);
+            $user = json_decode(file_get_contents("php://input"));
+            if(!empty($user->email) && !empty($user->password)){
+                $email = $user->email;
+                $pass = $user->password;
+                $userDb = $this->model->getUserByEmail($email);
+                
+                $hash = $userDb->password;
+                $match = password_verify($pass, $hash);
+                
+                if($match){
+                    $reply = $this->login($userDb);
+                } else {
+                    $reply = [
+                        'status' => 'error',
+                        'msg' => 'El usuario o la contraseña son incorrectos.'
+                    ];
+                }
             } else {
                 $reply = [
                     'status' => 'error',
-                    'msg' => 'El usuario o la contraseña son incorrectos.'
+                    'msg' => 'Faltan datos obligatorios'
                 ];
             }
-        } else {
-            $reply = [
-                'status' => 'error',
-                'msg' => 'Faltan datos obligatorios'
-            ];
         }
-        $this->response->response($reply, 200);
-    }
+            $this->response->response($reply, 200);
+        }
 
     public function add(){
         $user = json_decode(file_get_contents("php://input"));
@@ -145,6 +144,15 @@ class UserController extends Controller{
 
                 $this->model->editUser($userDb->id, $email, $phone);
             }
+        }
+    }
+
+    public function getTherapist() {
+        $admins = $this->model->getUsersAdmin(1);
+        if ($admins) {
+            $this->response->response($admins, 200);
+        } else {
+            $this->response->response(null, 404);
         }
     }
 }
