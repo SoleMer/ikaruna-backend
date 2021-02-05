@@ -6,11 +6,13 @@ class AuthHelper {
             session_start();
     }
 
-    static public function login($user){
-        self::start();
-        $_SESSION['ID_USER'] = $user[0]->id_user;
-        $_SESSION['USERNAME'] = $user[0]->userName;
-        $_SESSION['ADMIN'] = $user[0]->admin;
+    static public function login($id,$username,$email,$admin, $token){
+        AuthHelper::start();
+        $_SESSION['ID_USER'] = $id;
+        $_SESSION['USERNAME'] = $username;
+        $_SESSION['EMAIL'] = $email;
+        $_SESSION['ADMIN'] = $admin;
+        $_SESSION['TOKEN'] = $token;
     }
 
     public static function checkLoggedIn(){
@@ -37,8 +39,10 @@ class AuthHelper {
 
     public static function checkAdmin(){
         self::start();
-        $permitAdmin= $_SESSION['ADMIN'];
-        return  $permitAdmin;
+        if(isset($_SESSION['ADMIN']))
+            return $_SESSION['ADMIN'];
+        else
+        return null;
     }
 
     public static function logout()
@@ -58,6 +62,7 @@ class AuthHelper {
         else
             return null;
     }
+    
     
 }
 ?> 

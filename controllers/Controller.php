@@ -1,23 +1,28 @@
 <?php
 
 include_once('response/Response.php');
+include_once('cookies.php');
 
 class Controller {
 
     protected $response;
+    protected $cookies;
 
     public function __construct()    {
         $this->response = new Response();
+        $this->cookies = new Cookies();
     }
         
     
     //return true if the user logged is admin
     public function check() {
-        $admin = AuthHelper::checkAdmin();
-        if($admin == 1) {
+    return UserController::checkAdmin();
+        /*    if(UserController::checkAdmin() == 1) {
             return true;
+        } else {
+        return false; 
         }
-        return false;
+        */
     }
 
     public function getAllToAdmmin() {

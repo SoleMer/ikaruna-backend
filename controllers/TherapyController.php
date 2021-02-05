@@ -23,15 +23,47 @@ class TherapyController extends Controller{
     }
 
     public function add() {
-        if ($this->check()) {
+        //session_start();
+        if(1) { //if ($_SESSION['admin']) {
             $trp = json_decode(file_get_contents("php://input"));
             if (!empty($trp->name) && !empty($trp->description)) {
                 $name = $trp->name;
                 $description = $trp->description;
                 $therapist = $trp->therapist_id;
-                $this->model->save($name,$description,$therapist);
+                $succes =$this->model->save($name,$description,$therapist);
+
+                if($succes) {
+                    $trp = $this->model->getTherapyByName($name);
+                    $reply = [
+                        'status' => 'ok',
+                        'msg' => $this->check(),
+                        'id' => $trp->id
+                    ];
+                } else {
+                    $reply = [
+                        'status' => 'error',
+                        'msg' => 'No se pudo guardar',
+                    ];
+                }
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'Faltan datos',
+                ];
             }
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'El usuario no tiene permiso para guardar.',
+            ];
         }
+        $this->response->response(json_encode($reply), 200);
+    }
+
+    public function getById($params = []) {
+        $id = $params[':ID'];
+        $trp = $this->model->getTherapyById($id);
+        $this->response->response($trp, 200);
     }
 
     public function edit($params = []) {

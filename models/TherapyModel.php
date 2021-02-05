@@ -16,6 +16,12 @@ class TherapyModel extends Model {
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
+    public function getTherapyByName($name){
+        $query = $this->db->prepare('SELECT * FROM `therapy` WHERE name = ?');
+        $query->execute(array(($name)));
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
     public function save($name,$description,$therapist) {
         $query = $this->db->prepare('INSERT INTO therapy (name, description, therapist_id) VALUES (?, ?, ?)');
         return $query->execute([$name, $description, $therapist]);
