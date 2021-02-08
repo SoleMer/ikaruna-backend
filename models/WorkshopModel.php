@@ -2,9 +2,9 @@
 
 class WorkshopModel extends Model{
     
-    public function save($name,$contents,$modality){
-        $query = $this->db->prepare('INSERT INTO workshop (name, contents, modality) VALUES (?, ?, ?)');
-        return $query->execute([$name, $contents, $modality]);
+    public function save($name,$caption,$contents,$modality){
+        $query = $this->db->prepare('INSERT INTO workshop (name, caption, contents, modality) VALUES (?, ?, ?, ?)');
+        return $query->execute([$name, $caption, $contents, $modality]);
     }
     
     public function delete($id){

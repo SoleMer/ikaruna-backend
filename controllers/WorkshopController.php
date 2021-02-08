@@ -17,16 +17,41 @@ class WorkshopController extends Controller{
 
 
     public function add() {
-        if ($this->check()) {
+        if(1) { //if ($this->check()) {
             $ws = json_decode(file_get_contents("php://input"));
-            if (!empty($ws->name) && !empty($ws->contents) && !empty($ws->modality)) {
+            if (!empty($ws->name) && !empty($ws->contents) && !empty($ws->caption) && !empty($ws->modality)) {
                 $name = $ws->name;
+                $caption = $ws->caption;
                 $contents = $ws->contents;
                 $modality = $ws->modality;
                 
-                $this->model->save($name,$contents,$modality);
+                $success = $this->model->save($name,$caption,$contents,$modality);
+
+                if($success) {
+                    $reply = [
+                        'status' => 'ok',
+                        'msg' => 'Taller agregado'
+                    ];
+                } else {
+                    $reply = [
+                        'status' => 'error',
+                        'msg' => 'No se pudo agregar'
+                    ];
+                }
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'Faltan datos'
+                ];
             }
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Sólo los administradores tienen permiso para agregar'
+            ];
         }
+
+        $this->response->response($reply, 200);
     }
 
     public function edit($params = []) {

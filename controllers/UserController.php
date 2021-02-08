@@ -159,6 +159,29 @@ class UserController extends Controller{
         }
     }
 
+    public function getAll() {
+        if(1) {//if ($this->check()) {
+            $users = $this->model->getAll();
+            if($users) {
+                $this->response->response($users, 200);
+            } else {
+                $this->response->response(null, 404);
+            }
+
+        } else {
+            $this->response->response(null, 404);
+        }
+    }
+
+    public function getById($params = []) {
+        $user = $this->model->getUserById($params[':ID']);
+        if($user) {
+            $this->response->response($user, 200);
+        } else {
+            $this->response->response(null, 404);
+        }
+    }
+
     public static function checkAdmin(){
         session_start();
         return $_SESSION['ADMIN'];
