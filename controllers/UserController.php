@@ -182,6 +182,22 @@ class UserController extends Controller{
         }
     }
 
+    public function delete($params = []) {
+        $deleted = $this->model->delete($params[':ID']);
+        if($deleted) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Usuario eliminado',
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pudo eliminar el usuario. Por favor, intente más tarde',
+            ];
+        }
+        $this->response->response($reply, 200);
+    }
+
     public static function checkAdmin(){
         session_start();
         return $_SESSION['ADMIN'];

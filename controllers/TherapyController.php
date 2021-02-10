@@ -66,6 +66,22 @@ class TherapyController extends Controller{
         $this->response->response($trp, 200);
     }
 
+    public function delete($params = []) {
+        $deleted = $this->model->delete($params[':ID']);
+        if($deleted) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Terapia eliminada',
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pudo eliminar la terapia. Por favor, intente más tarde',
+            ];
+        }
+        $this->response->response($reply, 200);
+    }
+
     public function edit($params = []) {
         if ($this->check()) {
             $id = $params[':ID'];

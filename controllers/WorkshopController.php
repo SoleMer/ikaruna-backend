@@ -54,6 +54,22 @@ class WorkshopController extends Controller{
         $this->response->response($reply, 200);
     }
 
+    public function delete($params = []) {
+        $deleted = $this->model->delete($params[':ID']);
+        if($deleted) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Taller eliminado',
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pudo eliminar el taller. Por favor, intente más tarde',
+            ];
+        }
+        $this->response->response($reply, 200);
+    }
+
     public function edit($params = []) {
         if ($this->check()) {
             $id = $params[':ID'];

@@ -64,6 +64,20 @@ class ShiftController extends Controller {
         }
     }
 
+    public function getAll() {
+        if(1) {//if ($this->check()) {
+            $shifts = $this->model->getAll();
+            if($shifts) {
+                $this->response->response($shifts, 200);
+            } else {
+                $this->response->response(null, 404);
+            }
+
+        } else {
+            $this->response->response(null, 404);
+        }
+    }
+
 }
 
 ?>

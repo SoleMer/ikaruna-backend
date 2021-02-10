@@ -35,11 +35,11 @@ $router->addRoute('therapy', 'GET', 'TherapyController', 'getAll'); //DONE
 $router->addRoute('therapy/:ID', 'GET', 'TherapyController', 'getById'); //??
 $router->addRoute('therapy', 'POST', 'TherapyController', 'add'); //DONE
 $router->addRoute('therapy/:ID', 'PUT', 'TherapyContorller', 'edit');
-$router->addRoute('therapy/:D', 'DELETE', 'TherapyController', 'delete');
+$router->addRoute('therapy/:ID', 'DELETE', 'TherapyController', 'delete');
 
 $router->addRoute('workshop', 'GET', 'WorkshopController', 'getAll'); //DONE
 $router->addRoute('workshop', 'POST', 'WorkshopController', 'add'); //DONE
-$router->addRoute('workshop/:ID', 'DELETE', 'WorkshopCntroller', 'delete');
+$router->addRoute('workshop/:ID', 'DELETE', 'WorkshopController', 'delete');
 $router->addRoute('workshop/:ID', 'PUT', 'WorkshopController', 'edit');
 
 $router->addRoute('question', 'POST', 'QuestionController', 'add'); //DONE
