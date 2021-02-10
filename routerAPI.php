@@ -10,7 +10,7 @@ require_once 'controllers/QuestionController.php';
 //define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . dirname($_SERVER['PHP_SELF']) . '/');
 
 $router = new Router();
-header('Access-Control-Allow-Origin: http://localhost/4200');
+header('Access-Control-Allow-Origin: http://localhost:4200');
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 

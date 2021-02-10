@@ -36,7 +36,7 @@ class TherapyController extends Controller{
                     $trp = $this->model->getTherapyByName($name);
                     $reply = [
                         'status' => 'ok',
-                        'msg' => $this->check(),
+                        'msg' => 'Terapia guardada',
                         'id' => $trp->id
                     ];
                 } else {
