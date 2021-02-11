@@ -83,12 +83,11 @@ class TherapyController extends Controller{
     }
 
     public function edit($params = []) {
-        if ($this->check()) {
+        if(1) { //if ($this->check()) {
             $id = $params[':ID'];
             $trpDB = $this->model->getTherapyById($id);
             $trp = json_decode(file_get_contents("php://input"));
-            if (!empty($trp->name) || !empty($trp->description) || $trp->therapist != $trpDB->therapist) {
-                if (!empty($trp->name)) {
+            if (!empty($trp->name)) {
                 $name = $trp->name;
             } else {
                 $name = $trpDB->name;
@@ -98,13 +97,32 @@ class TherapyController extends Controller{
             } else {
                 $description = $trpDB->description;
             }
-            $therapist = $trp->therapist;
-            
-            $this->model->editTherapy($id,$name,$description,$therapist);
-        }
-    }
-}
+            if($trp->therapist_id != $trpDB->therapist_id) {
+                $therapist = $trp->therapist_id;
+            } else {
+                $therapist = $trpDB->therapist_id;
+            }
+            $edited = $this->model->editTherapy($id,$name,$description,$therapist);
 
+            if($edited) {
+                $reply = [
+                    'status' => 'ok',
+                    'msg' => 'Cambios guardados'
+                ];
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No se pudieron guardar los cambios'
+                ];
+            }
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Sólo los administradores pueden editar'
+            ];
+        }
+        $this->response->response($reply, 200);
+    }
 }
 
 ?>
