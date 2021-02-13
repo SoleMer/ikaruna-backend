@@ -16,7 +16,7 @@ class AuthHelper {
     }
 
     public static function checkLoggedIn(){
-        session_status();
+        self::start();
         if(!empty($_SESSION['USERNAME'])){
             return true;
         }
@@ -39,7 +39,7 @@ class AuthHelper {
 
     public static function checkAdmin(){
         self::start();
-        if(isset($_SESSION['ADMIN']))
+        if(!empty($_SESSION['ADMIN']))
             return $_SESSION['ADMIN'];
         else
         return null;

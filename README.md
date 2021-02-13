@@ -31,9 +31,7 @@ COMO USUARIO LOGUEADO DEBO PODER:
 	-editar mis datos de contacto.
 	
 COMO ADMIN DEBO PODER:
-	+agregar terapias 
-	+eliminar terapias 
-	-editar terapias.
+	+agregar, eliminar y editar terapias 
 	+agregar talleres 
 	+eliminar talleres
 	-editar los talleres.
@@ -41,6 +39,6 @@ COMO ADMIN DEBO PODER:
 	?acceder al listado completo de turnos.
 	-agregar un turno ya confirmado (status = 1).
 	-confirmar un turno solicitado. (cambiar el status=0->1).
-	-cambiar la fecha y hora de un turno. Si el turno tenía status=0, al cambiar la fecha y hora se confirma.
+	-cambiar la fecha y hora de un turno. Si el turno tenía status==0, al cambiar la fecha y hora se confirma (status = 1).
 	+acceder al listado de usuarios.
 	+eliminar un usuario.

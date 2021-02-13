@@ -16,24 +16,25 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 
 //$router->addRoute('recurso', 'verbo', 'controlador', 'funcion');
 
-$router->addRoute('user', 'POST', 'UserController', 'add'); //DONE
+$router->addRoute('user', 'POST', 'UserController', 'add'); 
 $router->addRoute('user/:ID', 'DELETE', 'UserController', 'delete'); 
-$router->addRoute('user', 'GET', 'UserController', 'getAll'); //DONE
+$router->addRoute('user', 'GET', 'UserController', 'getAll');
+$router->addRoute('user/:ID', 'GET', 'UserController', 'getById'); 
 $router->addRoute('user/:ID', 'PUT', 'UserController', 'edit');
 
-$router->addRoute('admin/', 'GET', 'UserController', 'getTherapist'); //DONE
+$router->addRoute('admin/', 'GET', 'UserController', 'getTherapist');
 
-$router->addRoute('login', 'POST', 'UserController', 'verify'); //DONE
-$router->addRoute('logout', 'DELETE', 'UserController', 'logout'); //DONE
+$router->addRoute('login', 'POST', 'UserController', 'verify'); 
+$router->addRoute('logout', 'DELETE', 'UserController', 'logout'); 
 
 $router->addRoute('shift', 'POST', 'ShiftController', 'add');
 $router->addRoute('shift/:ID', 'PUT', 'ShiftController', 'confirm');
 $router->addRoute('shift/:ID','DELETE', 'ShiftController', 'delete');
 $router->addRoute('shift', 'GET', 'ShiftController', 'getAllToAdmin');
 
-$router->addRoute('therapy', 'GET', 'TherapyController', 'getAll'); //DONE
-$router->addRoute('therapy/:ID', 'GET', 'TherapyController', 'getById'); //??
-$router->addRoute('therapy', 'POST', 'TherapyController', 'add'); //DONE
+$router->addRoute('therapy', 'GET', 'TherapyController', 'getAll'); 
+$router->addRoute('therapy/:ID', 'GET', 'TherapyController', 'getById'); 
+$router->addRoute('therapy', 'POST', 'TherapyController', 'add');
 $router->addRoute('therapy/:ID', 'PUT', 'TherapyController', 'edit');
 $router->addRoute('therapy/:ID', 'DELETE', 'TherapyController', 'delete');
 

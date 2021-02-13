@@ -3,23 +3,25 @@ include_once('controllers/Controller.php');
 include_once('models/UserModel.php');
 include_once('response/Response.php');
 include_once('cookies.php');
+include_once('helpers/auth.helper.php');
 
 class UserController extends Controller{
 
     private $model;
     protected $response;
+    private $isAdmin;
 
     public function __construct() {
         $this->model = new UserModel;
         $this->response = new Response();
+        $this->isAdmin = AuthHelper::checkAdmin();
     }
 
     public function login($user) {
-            session_set_cookie_params(time()+(60*60*24*31), "/", "http://localhost", false, false);
-            session_start();
+         //   session_set_cookie_params(time()+(60*60*24*31), "/", "http://localhost", false, false);
             $token = sha1(uniqid(rand(),true));
-            //   AuthHelper::login($user->id, $user->username, $user->email, $user->admin, $token);
-            $_SESSION['ID_USER'] = $user->id;
+            AuthHelper::login($user->id, $user->username, $user->email, $user->admin, $token);
+        /*    $_SESSION['ID_USER'] = $user->id;
             $_SESSION['USERNAME'] = $user->username;
             $_SESSION['EMAIL'] = $user->email;
             $_SESSION['ADMIN'] = $user->admin;
@@ -27,14 +29,14 @@ class UserController extends Controller{
             setcookie("token", $token, time()+(60*60*24*31),"/");
             setcookie("id", $user->id, time()+(60*60*24*31),"/");
             setcookie("admin", $user->admin, time()+(60*60*24*31),"/");
-            
+        */    
             
             $reply = [
                 'status' => 'ok',
-                'msg' => session_status(),
+                'msg' => "Sesión iniciada",
                 'token' => $token,
                 'id_user' => $_SESSION['ID_USER'],
-                'isAdmin' => $_SESSION['ADMIN']
+                'isAdmin' => AuthHelper::checkAdmin()     
             ];
         return $reply;
     }
@@ -129,11 +131,11 @@ class UserController extends Controller{
     public function edit($params = []) {
         $user = json_decode(file_get_contents("php://input"));
         if (!empty($user->password)) {
-            $hash = $user->password;
             $userDb = $this->model->getUserById($params[':ID']);
-            $response = password_verify($userDb->password, $hash);
+            $hash = $userDb->password;
+            $match = password_verify($user->password, $hash);
 
-            if ($response) {
+            if ($match) {
                 if (!empty($user->email)) {
                     $email = $user->email;
                 }else {
@@ -145,9 +147,33 @@ class UserController extends Controller{
                     $phone = $userDb->phone;
                 }
 
-                $this->model->editUser($userDb->id, $email, $phone);
+                $success = $this->model->editUser($userDb->id, $email, $phone);
+
+                if($success) {
+                    $reply = [
+                        'status' => 'ok',
+                        'msg' => 'Datos actualizados'
+                    ];
+                } else {
+                    $reply = [
+                        'status' => 'error',
+                        'msg' => 'No se pudieron guardar los cambios. Intente más tarde.'
+                    ];
+                }
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'Contraseña incorrecta.'
+                ];
             }
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Debe ingresar la contraseña para confirmar su identidad'
+            ];
         }
+
+        $this->response->response($reply, 200);
     }
 
     public function getTherapist() {
@@ -160,7 +186,7 @@ class UserController extends Controller{
     }
 
     public function getAll() {
-        if(1) {//if ($this->check()) {
+        if(1) {//if (AuthHelper::checkAdmin()) {
             $users = $this->model->getAll();
             if($users) {
                 $this->response->response($users, 200);

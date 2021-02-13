@@ -2,6 +2,7 @@
 
 include_once('models/TherapyModel.php');
 include_once('response/Response.php');
+include_once('helpers/auth.helper.php');
 
 class TherapyController extends Controller{
 
@@ -23,8 +24,7 @@ class TherapyController extends Controller{
     }
 
     public function add() {
-        //session_start();
-        if(1) { //if ($_SESSION['admin']) {
+        if(1) { //if (AuthHelper::checkAdmin()) {
             $trp = json_decode(file_get_contents("php://input"));
             if (!empty($trp->name) && !empty($trp->description)) {
                 $name = $trp->name;
@@ -54,7 +54,7 @@ class TherapyController extends Controller{
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'El usuario no tiene permiso para guardar.',
+                'msg' => session_status(),
             ];
         }
         $this->response->response(json_encode($reply), 200);
@@ -83,7 +83,7 @@ class TherapyController extends Controller{
     }
 
     public function edit($params = []) {
-        if(1) { //if ($this->check()) {
+        if(1) {//if (AuthHelper::checkAdmin()) {
             $id = $params[':ID'];
             $trpDB = $this->model->getTherapyById($id);
             $trp = json_decode(file_get_contents("php://input"));
