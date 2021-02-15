@@ -12,9 +12,9 @@ class WorkshopModel extends Model{
         return $query->execute([$id]);
     }
 
-    public function editWorkshop($id, $name, $contents,$modality){
-        $query = $this->db->prepare('UPDATE `workshop` SET `name`= ? , `contents`= ? , `modality`= ?  WHERE `id` = ?');
-        return $query->execute([$name,$contents,$modality,$id]);
+    public function editWorkshop($id, $name, $caption, $contents,$modality){
+        $query = $this->db->prepare('UPDATE `workshop` SET `name`= ? , `caption`= ? , `contents`= ? , `modality`= ?  WHERE `id` = ?');
+        return $query->execute([$name,$caption,$contents,$modality,$id]);
     }
     
     public function getAll(){

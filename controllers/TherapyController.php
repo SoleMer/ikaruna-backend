@@ -97,7 +97,7 @@ class TherapyController extends Controller{
             } else {
                 $description = $trpDB->description;
             }
-            if($trp->therapist_id != $trpDB->therapist_id) {
+            if(!empty($trp->therapist_id) && $trp->therapist_id != $trpDB->therapist_id) {
                 $therapist = $trp->therapist_id;
             } else {
                 $therapist = $trpDB->therapist_id;

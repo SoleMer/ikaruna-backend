@@ -32,9 +32,7 @@ COMO USUARIO LOGUEADO DEBO PODER:
 	
 COMO ADMIN DEBO PODER:
 	+agregar, eliminar y editar terapias 
-	+agregar talleres 
-	+eliminar talleres
-	-editar los talleres.
+	+agregar, eliminar y editar talleres 
 	+acceder al listado de preguntas.
 	?acceder al listado completo de turnos.
 	-agregar un turno ya confirmado (status = 1).

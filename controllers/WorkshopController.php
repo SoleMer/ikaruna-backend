@@ -71,15 +71,19 @@ class WorkshopController extends Controller{
     }
 
     public function edit($params = []) {
-        if ($this->check()) {
+        if(1) { //if (AuthHelper::checkAdmin()) {
             $id = $params[':ID'];
             $ws = json_decode(file_get_contents("php://input"));
             $wsDb= $this->model->getWorkshopById($id);
-            if (!empty($ws->name) || !empty($ws->contents) || !empty($ws->modality)) {
                 if (!empty($ws->name)) {
                     $name = $ws->name;
                 }else {
                     $name = $wsDb->name;
+                }
+                if (!empty($ws->caption)) {
+                    $caption = $ws->caption;
+                }else {
+                    $caption = $wsDb->caption;
                 }
                 if (!empty($ws->contents)) {
                     $contents = $ws->contents;
@@ -92,9 +96,26 @@ class WorkshopController extends Controller{
                     $modality = $wsDb->modality;
                 }
                 
-                $this->model->editWorkshop($id,$name,$contents,$modality);
+                $edited = $this->model->editWorkshop($id,$name,$caption,$contents,$modality);
+
+                if($edited) {
+                    $reply = [
+                        'status' => 'ok',
+                        'msg' => 'Cambios guardados.'
+                    ];
+                } else {
+                    $reply = [
+                        'status' => 'error',
+                        'msg' => 'No se pudo editar, intente más tarde.'
+                    ];
+                }
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'Sólo los administradores pueden editar.'
+                ];
             }
-        }
+            $this->response->response($reply, 200);
     }
 }
 
