@@ -36,7 +36,7 @@ class UserController extends Controller{
                 'msg' => "Sesión iniciada",
                 'token' => $token,
                 'id_user' => $_SESSION['ID_USER'],
-                'isAdmin' => AuthHelper::checkAdmin()     
+                'isAdmin' => $user->admin     
             ];
         return $reply;
     }

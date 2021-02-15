@@ -8,9 +8,9 @@ class ShiftModel extends Model{
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function save($date,$time,$patient,$therapy,$therapist,$status) {
-        $query = $this->db->prepare('INSERT INTO shift (date, time, patient_id, therapy_id, therapist_id, status) VALUES (?, ?, ?, ?, ?, ?)');
-        return $query->execute([$date,$time,$patient,$therapy,$therapist,$status]);
+    public function save($date,$patient,$therapy,$therapist,$status) {
+        $query = $this->db->prepare('INSERT INTO shift (date, patient_id, therapy_id, therapist_id, status) VALUES (?, ?, ?, ?, ?)');
+        return $query->execute([$date,$patient,$therapy,$therapist,$status]);
     }
 
     public function confirmShift($id) {

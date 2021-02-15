@@ -20,18 +20,16 @@ class ShiftController extends Controller {
     public function add() {
         $shift = json_decode(file_get_contents("php://input"));
         if(!empty($shift->date) && !empty($shift->time) && !empty($shift->patient)){
-            $therapy = $shift->therapy;  
-            $date = date_parse_from_format('!Y-m-d', strtotime($shift->date)); //date('D,d M Y H:i:s',$shift->date); 
-            $time = date_parse_from_format('H:i', $shift->time);
-//                $time = time($shift->time);
-            $patient = $shift->patient;
+            $therapy = $shift->therapy; 
+            $dateTime = $shift->date . ' ' . $shift->time . ':00' ;
+           $patient = $shift->patient;
             $status = $shift->status;
-            $therapist = 5;  
+            $therapist = 0;  
                 //$status = AuthHelper::checkAdmin();
                 //checkAdmin() return 1 if user is admin, and 0 if he isn't.
                 //the status of the shift is 0 if it wasn't confirmed by an admin yet,
                 //and 1 if the shift was confirmed or added by an admin.
-            $success = $this->model->save($date,$time,$patient,$therapy,$therapist,$status);
+            $success = $this->model->save($dateTime,$patient,$therapy,$therapist,$status);
             if($success) {
                 $reply = [
                     'status' => 'ok',
@@ -54,7 +52,7 @@ class ShiftController extends Controller {
                 'msg' => 'Datos incompletos'
             ];
         }
-        $this->response->response(json_encode($reply), 200);
+        $this->response->response($reply, 200);
     }
 
     public function confirm($params = []) {

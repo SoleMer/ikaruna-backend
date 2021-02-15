@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-02-2021 a las 01:02:50
+-- Tiempo de generación: 15-02-2021 a las 21:54:29
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -47,6 +47,13 @@ CREATE TABLE `question` (
   `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Volcado de datos para la tabla `question`
+--
+
+INSERT INTO `question` (`id`, `text`, `user_id`) VALUES
+(5, 'chau', 6);
+
 -- --------------------------------------------------------
 
 --
@@ -55,8 +62,7 @@ CREATE TABLE `question` (
 
 CREATE TABLE `shift` (
   `id` int(11) NOT NULL,
-  `date` date NOT NULL,
-  `time` time NOT NULL,
+  `date` datetime NOT NULL,
   `therapy_id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
   `therapist_id` int(11) NOT NULL,
@@ -81,11 +87,17 @@ CREATE TABLE `therapy` (
 --
 
 INSERT INTO `therapy` (`id`, `name`, `description`, `therapist_id`) VALUES
-(1, 'Reiki Presencial', 'El Reiki es una terapia alternativa que...', 5),
-(2, 'Reiki a distancia. Larga duración.', 'Tiene las mismas características que el Reiki presencial, pero se practica a distancia.', 3),
+(1, 'Reiki', 'Presencial. Terapia complementaria que ...', 5),
+(2, 'Reiki a distancia. Larga duración.', 'Se practica a distancia y ....', 0),
 (3, 'Reiki a distancia. Corta duración.', 'Tiene las mismas características que el Reiki presencial,pero se practica a distancia y con menos intensidad.', 3),
 (4, 'Masaje Venusiano', 'Masaje en rostro, cabeza y parte del pecho. Es un verdadero lifting facial que ayuda...', 4),
-(5, 'Lectura de Tarot Terapéutico', '22 arcanos', 5);
+(5, 'Lectura de Tarot Terapéutico', '22 arcanos', 5),
+(6, 'Sanación y Armonización Energética', 'Esta terapia ayuda a estar en un completo equilibrio emocional, físico y mental. Se realiza a distancia y dura aproximadamente una hora y en la que el paciente debe procurar estar tranquilo/a.', 0),
+(20, 'terapia nueva', 'bbjnj', 0),
+(21, 'terapia nueva', 'bbjnj', 0),
+(22, 'mn', 'mmm', 0),
+(23, 'nm', 'nueva', 0),
+(24, 'nueva', 'terapia', 4);
 
 -- --------------------------------------------------------
 
@@ -110,8 +122,7 @@ INSERT INTO `user` (`id`, `username`, `email`, `phone`, `password`, `admin`) VAL
 (3, 'Gri', 'griseldadelcastello@gmail.com', '2262485889', '$2y$10$xdkMlqlitq/rTnL.iBKidO7/ZkIOZhjcHJk2tD.vRJUuI1XlhhmOO', 1),
 (4, 'Sole', 'soledadmerino.1994@gmail.com', '2262630591', '$2y$10$wBp9qlSnzTZpIZXxGq/ZeeHJiKxpenhiu9kwCJ.1Y0ytLvbbHw/6S', 1),
 (5, 'Gri ySole', 'ikaruna@gmail.com', '123', '$2y$10$ZVF24pJOVuEQXPqUNGT16.7hqMTPfJUKoUTLWEQUC1dPiCGD4J7Uu', 1),
-(6, 'Usuario 1', 'usuario1@gmail.com', '2262345678', '$2y$10$VX2MUVgSCwHOhgybuckt3.436NWrkEoMtVMpiqR5J79FpsYq1rm2e', 0),
-(7, 'Usuario2', 'usuario2@gmail.com', '2262333333', '$2y$10$VL9xYWwgGvh5UCodoSH29uGdboFLVE/BOEomr6PLGCqPAmn5KEumG', 0);
+(6, 'Usuario 1', 'usuario1@gmail.com', '1234', '$2y$10$VX2MUVgSCwHOhgybuckt3.436NWrkEoMtVMpiqR5J79FpsYq1rm2e', 0);
 
 -- --------------------------------------------------------
 
@@ -132,7 +143,7 @@ CREATE TABLE `workshop` (
 --
 
 INSERT INTO `workshop` (`id`, `name`, `caption`, `contents`, `modality`) VALUES
-(1, 'Despertar', 'Aprendé a hacer tu sueños realidad!', 'Introducción.\r\nLey de Atracción.\r\nMantras. Qué son y cómo crearlos.\r\nSigilos. Qué son y cómo crearlos.\r\nActividades para la creación de mantras y sigilos.\r\nMeditaciones guiadas en audios.\r\nVideos explicativos.\r\nAcompañamiento permanente.', '100 % online. Una vez efectuado el pago, se envía un .pdf con todo el contenido del taller y los links a los videos y audios.');
+(1, 'Taller Despertar', 'Aprendé a hacer tu sueños realidad!', 'Introducción.\r\nLey de Atracción.\r\nMantras. Qué son y cómo crearlos.\r\nSigilos. Qué son y cómo crearlos.\r\nActividades para la creación de mantras y sigilos.\r\nMeditaciones guiadas en audios.\r\nVideos explicativos.\r\nAcompañamiento permanente.', '100 % online. Una vez efectuado el pago, se envía un .pdf con todo el contenido del taller y los links a los videos y audios.');
 
 --
 -- Índices para tablas volcadas
@@ -188,25 +199,25 @@ ALTER TABLE `notification`
 -- AUTO_INCREMENT de la tabla `question`
 --
 ALTER TABLE `question`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `shift`
 --
 ALTER TABLE `shift`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `therapy`
 --
 ALTER TABLE `therapy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `workshop`
