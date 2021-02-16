@@ -39,14 +39,15 @@ $router->addRoute('therapy', 'POST', 'TherapyController', 'add');
 $router->addRoute('therapy/:ID', 'PUT', 'TherapyController', 'edit');
 $router->addRoute('therapy/:ID', 'DELETE', 'TherapyController', 'delete');
 
-$router->addRoute('workshop', 'GET', 'WorkshopController', 'getAll'); //DONE
-$router->addRoute('workshop', 'POST', 'WorkshopController', 'add'); //DONE
+$router->addRoute('workshop', 'GET', 'WorkshopController', 'getAll'); 
+$router->addRoute('workshop', 'POST', 'WorkshopController', 'add'); 
 $router->addRoute('workshop/:ID', 'DELETE', 'WorkshopController', 'delete');
 $router->addRoute('workshop/:ID', 'PUT', 'WorkshopController', 'edit');
 
-$router->addRoute('question', 'POST', 'QuestionController', 'add'); //DONE
-$router->addRoute('question', 'GET', 'QuestionController', 'getAllToAdmin'); //DONE
+$router->addRoute('question', 'POST', 'QuestionController', 'add'); 
+$router->addRoute('question', 'GET', 'QuestionController', 'getAllToAdmin'); 
 
+$router->addRoute('notification/:ID', 'GET', 'NotificationController', 'getAll'); 
 
 $router->route($_REQUEST['resource'], $_SERVER['REQUEST_METHOD']);
 ?>

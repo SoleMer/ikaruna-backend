@@ -3,17 +3,20 @@
 include_once('models/QuestionModel.php');
 include_once('senders/Sender.php');
 include_once('response/response.php');
+include_once('controllers/NotificationController.php');
 
 class QuestionController extends Controller {
 
     private $model;
     private $sender;
     protected $response;
+    private $notification;
 
     public function __construct() {
         $this->model = new QuestionModel;
         $this->sender = new Sender;
         $this->response = new Response();
+        $this->notification = new NotificationController;
     }
 
     public function add() {
@@ -25,6 +28,7 @@ class QuestionController extends Controller {
                 $success = $this->model->save($text,$user);
 
                 if($success) {
+                    $this->notification->notifyNewQuestion($question);
                     $reply = [
                         'status' => 'ok',
                         'msg' => 'Pregunta guardada'

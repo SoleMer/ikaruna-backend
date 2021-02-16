@@ -5,6 +5,7 @@ include_once('senders/Sender.php');
 include_once('controllers/Controller.php');
 include_once('response/response.php');
 include_once('models/UserModel.php');
+include_once('controllers/NotificationController.php');
 
 class ShiftController extends Controller {
 
@@ -12,12 +13,14 @@ class ShiftController extends Controller {
     protected $response;
     private $sender;
     private $userModel;
+    private $notifications;
 
     public function __construct() {
         $this->model = new ShiftModel;
         $this->response = new response();
         $this->sender = new Sender;
         $this->userModel = new UserModel;
+        $this->notifications = new NotificationController;
     }
 
     public function add() {
@@ -38,6 +41,9 @@ class ShiftController extends Controller {
             }
             $success = $this->model->save($dateTime,$patient,$username,$therapy,$status);
             if($success) {
+                if($status == 0) {
+                    $this->notifications->notifyShiftRequest($shift, $dateTime);
+                }
                 $reply = [
                     'status' => 'ok',
                     'msg' => 'Turno guardado'
@@ -80,9 +86,11 @@ class ShiftController extends Controller {
 
     public function confirm($params = []) {
         if(1) { //if(AuthHelper::checkAdmin()){
+            $id = $params[':ID'];
             $success = $this->model->confirmShift($params[':ID']);
 
             if($success) {
+                $this->notifications->notifyShiftAccepted($id);
                 $reply = [
                     'status' => 'ok',
                     'msg' => 'Turno confirmado.',

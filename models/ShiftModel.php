@@ -14,6 +14,12 @@ class ShiftModel extends Model{
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function getById($id) {
+        $query = $this->db->prepare('SELECT * FROM shift WHERE id = ?');
+        $query->execute(array(($id)));
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
     public function save($date,$patient,$username,$therapy,$status) {
         $query = $this->db->prepare('INSERT INTO shift (date, patient_id, patient_name, therapy_id, status) VALUES (?, ?, ?, ?, ?)');
         return $query->execute([$date,$patient,$username,$therapy,$status]);
