@@ -24,7 +24,7 @@ COMO USUARIO LOGUEADO DEBO PODER:
 	+hacer una consulta.
 	+editar mis datos de contacto.
 	+sacar un turno.
-	-ver mis turnos pendientes y aceptados.
+	+ver mis turnos pendientes y aceptados.
 	?solicitar hacer un taller.
 	-ver mis notificaciones.
 	-eliminar mis notifcaciones de una en una.

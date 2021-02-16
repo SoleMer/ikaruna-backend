@@ -124,6 +124,28 @@ class ShiftController extends Controller {
         }
     }
 
+    public function getUserShifts($params = []) {
+        if(1) {//if (AuthHelper::check()) { CHEQUEAR QUE EL USER QUE SOLICITA SEA EL QUE TIENELA SESION INICIADA
+            $shifts = $this->model->getByUserId($params[':ID']);
+            if($shifts) {
+                $this->response->response($shifts, 200);
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No hay turnos registrados para este usuario.'
+                ];
+                $this->response->response($reply, 200);
+            }
+
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pueden visualizar los turnos de otro usuario.'
+            ];
+            $this->response->response($reply, 200);
+        }
+    }
+
 }
 
 ?>
