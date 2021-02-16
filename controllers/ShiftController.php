@@ -4,32 +4,39 @@ include_once('models/ShiftModel.php');
 include_once('senders/Sender.php');
 include_once('controllers/Controller.php');
 include_once('response/response.php');
+include_once('models/UserModel.php');
 
 class ShiftController extends Controller {
 
     private $model; 
     protected $response;
     private $sender;
+    private $userModel;
 
     public function __construct() {
         $this->model = new ShiftModel;
         $this->response = new response();
         $this->sender = new Sender;
+        $this->userModel = new UserModel;
     }
 
     public function add() {
         $shift = json_decode(file_get_contents("php://input"));
-        if(!empty($shift->date) && !empty($shift->time) && !empty($shift->patient)){
+        if(!empty($shift->date) && !empty($shift->time)){
             $therapy = $shift->therapy; 
             $dateTime = $shift->date . ' ' . $shift->time . ':00' ;
-           $patient = $shift->patient;
             $status = $shift->status;
-            $therapist = 0;  
-                //$status = AuthHelper::checkAdmin();
-                //checkAdmin() return 1 if user is admin, and 0 if he isn't.
-                //the status of the shift is 0 if it wasn't confirmed by an admin yet,
-                //and 1 if the shift was confirmed or added by an admin.
-            $success = $this->model->save($dateTime,$patient,$therapy,$therapist,$status);
+            //$status = AuthHelper::checkAdmin();
+            //checkAdmin() return 1 if user is admin, and 0 if he isn't.
+            //the status of the shift is 0 if it wasn't confirmed by an admin yet,
+            //and 1 if the shift was confirmed or added by an admin.
+            $patient = $shift->patient;
+            if($patient == 0) {
+                $username = $shift->patient_name;
+            } else {
+                $username = $this->userModel->getUserById($patient)->username;
+            }
+            $success = $this->model->save($dateTime,$patient,$username,$therapy,$status);
             if($success) {
                 $reply = [
                     'status' => 'ok',
@@ -55,24 +62,65 @@ class ShiftController extends Controller {
         $this->response->response($reply, 200);
     }
 
-    public function confirm($params = []) {
-        if($this->check()){
-            $id = $params[':ID'];
-            $this->model->confirmShift($id);
+    public function delete($params = []) {
+        $deleted = $this->model->delete($params[':ID']);
+        if($deleted) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Turno eliminado',
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pudo eliminar el turno. Por favor, intente más tarde',
+            ];
         }
+        $this->response->response($reply, 200);
+    }
+
+    public function confirm($params = []) {
+        if(1) { //if(AuthHelper::checkAdmin()){
+            $success = $this->model->confirmShift($params[':ID']);
+
+            if($success) {
+                $reply = [
+                    'status' => 'ok',
+                    'msg' => 'Turno confirmado.',
+                ];
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No se pudo confirmar.',
+                ];
+            }
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Sólo los admin pueden confirmar turnos.',
+            ];
+        }
+        $this->response->response($reply, 200);
     }
 
     public function getAll() {
-        if(1) {//if ($this->check()) {
+        if(1) {//if (AuthHelper::checkAdmin()) {
             $shifts = $this->model->getAll();
             if($shifts) {
                 $this->response->response($shifts, 200);
             } else {
-                $this->response->response(null, 404);
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No hay turnos guardados.'
+                ];
+                $this->response->response($reply, 200);
             }
 
         } else {
-            $this->response->response(null, 404);
+            $reply = [
+                'status' => 'error',
+                'msg' => 'Sólo los admin pueden acceder al listado de turnos.'
+            ];
+            $this->response->response($reply, 200);
         }
     }
 

@@ -30,7 +30,7 @@ $router->addRoute('logout', 'DELETE', 'UserController', 'logout');
 $router->addRoute('shift', 'POST', 'ShiftController', 'add');
 $router->addRoute('shift/:ID', 'PUT', 'ShiftController', 'confirm');
 $router->addRoute('shift/:ID','DELETE', 'ShiftController', 'delete');
-$router->addRoute('shift', 'GET', 'ShiftController', 'getAllToAdmin');
+$router->addRoute('shift', 'GET', 'ShiftController', 'getAll');
 
 $router->addRoute('therapy', 'GET', 'TherapyController', 'getAll'); 
 $router->addRoute('therapy/:ID', 'GET', 'TherapyController', 'getById'); 

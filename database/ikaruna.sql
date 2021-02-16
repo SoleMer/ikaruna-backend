@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-02-2021 a las 21:54:29
+-- Tiempo de generación: 16-02-2021 a las 01:03:39
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -65,9 +65,18 @@ CREATE TABLE `shift` (
   `date` datetime NOT NULL,
   `therapy_id` int(11) NOT NULL,
   `patient_id` int(11) NOT NULL,
-  `therapist_id` int(11) NOT NULL,
+  `patient_name` varchar(256) NOT NULL,
   `status` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `shift`
+--
+
+INSERT INTO `shift` (`id`, `date`, `therapy_id`, `patient_id`, `patient_name`, `status`) VALUES
+(7, '2021-02-24 09:30:00', 4, 6, '0', 0),
+(8, '2021-02-24 11:40:00', 5, 6, '0', 0),
+(9, '2021-02-18 16:30:00', 1, 4, '0', 1);
 
 -- --------------------------------------------------------
 
@@ -205,7 +214,7 @@ ALTER TABLE `question`
 -- AUTO_INCREMENT de la tabla `shift`
 --
 ALTER TABLE `shift`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `therapy`

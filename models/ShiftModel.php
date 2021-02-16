@@ -3,14 +3,14 @@
 class ShiftModel extends Model{
  
     public function getAll() {
-        $query = $this->db->prepare('SELECT * FROM shift');
+        $query = $this->db->prepare('SELECT shift.*, therapy.name FROM shift LEFT JOIN therapy ON shift.therapy_id = therapy.id ORDER BY date ASC');
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function save($date,$patient,$therapy,$therapist,$status) {
-        $query = $this->db->prepare('INSERT INTO shift (date, patient_id, therapy_id, therapist_id, status) VALUES (?, ?, ?, ?, ?)');
-        return $query->execute([$date,$patient,$therapy,$therapist,$status]);
+    public function save($date,$patient,$username,$therapy,$status) {
+        $query = $this->db->prepare('INSERT INTO shift (date, patient_id, patient_name, therapy_id, status) VALUES (?, ?, ?, ?, ?)');
+        return $query->execute([$date,$patient,$username,$therapy,$status]);
     }
 
     public function confirmShift($id) {
