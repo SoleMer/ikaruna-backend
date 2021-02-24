@@ -30,6 +30,12 @@ class UserModel extends Model {
         return $query->fetch(PDO::FETCH_OBJ);      
     }
 
+    public function getByUsername($name) {
+        $query = $this->db->prepare('SELECT * FROM `user` WHERE username = ?');
+        $query->execute(array(($name)));
+        return $query->fetch(PDO::FETCH_OBJ);      
+    }
+
     public function getUserByEmail($email) {
         $query = $this->db->prepare('SELECT * FROM `user` WHERE email = ?');
         $query->execute(array(($email)));

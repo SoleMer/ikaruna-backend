@@ -5,6 +5,8 @@ include_once('models/UserModel.php');
 include_once('models/TherapyModel.php');
 include_once('response/Response.php');
 include_once('models/ShiftModel.php');
+include_once('senders/Sender.php');
+include_once('models/WorkshopModel.php');
 
 class NotificationController extends Controller{
     
@@ -13,6 +15,8 @@ class NotificationController extends Controller{
     private $trpModel;
     protected $response;
     private $shiftModel;
+    private $sender;
+    private $wsModel;
 
     public function __construct() {
         $this->model = new NotificationModel;
@@ -20,6 +24,8 @@ class NotificationController extends Controller{
         $this->trpModel = new TherapyModel;
         $this->response = new Response;
         $this->shiftModel = new ShiftModel;
+        $this->sender = new Sender;
+        $this->wsModel = new WorkshopModel;
     }
 
     public function notifyShiftRequest($shift, $date) {
@@ -33,7 +39,7 @@ class NotificationController extends Controller{
         foreach ($admins as $a) {
             $this->model->save($subject, $msg, $a->id);
         }
-        //TODO: enviar msj de texto a admins
+        //$this->sender->askShift($msg);
     }
 
     public function notifyShiftAccepted($shift_id) {
@@ -57,6 +63,8 @@ class NotificationController extends Controller{
         foreach ($admins as $a) {
             $this->model->save($subject, $msg, $a->id);
         }
+
+        //$this->sender->sendEmailQuestion($question, $user);
     }
 
     public function getAll($params = []) {
@@ -65,12 +73,67 @@ class NotificationController extends Controller{
         if($nots) {
             $this->response->response($nots, 200);
         } else {
+            
+            $this->response->response(null, 200);
+        }
+    }
+
+    public function delete($params = []) {
+        $deleted = $this->model->delete($params[':ID']);
+        if($deleted) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Notificación eliminada',
+            ];
+        } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'No hay notifcaciones.'
+                'msg' => 'No se pudo eliminar la notificación. Por favor, intente más tarde',
             ];
-            $this->response->response($reply, 200);
         }
+        $this->response->response($reply, 200);
+    }
+
+    public function deleteAll($params = []) {
+        $deleted = $this->model->deleteAll($params[':ID']);
+        if($deleted) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Notificaciones eliminadas',
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pudieron eliminar las notificaciones. Por favor, intente más tarde',
+            ];
+        }
+        $this->response->response($reply, 200);
+    }
+
+    public function add() {
+        $subject = 'workshop';
+        $request = json_decode(file_get_contents("php://input")) ;
+        $user_id = $request->user;
+        $ws_id = $request->ws;
+
+        $user = $this->userModel->getUserById($user_id);
+        $workshop = $this->wsModel->getWorkshopById($ws_id);
+
+        $msg = $user->username . ' desea hacer el taller ' . $workshop->name . 
+        '. Su email es: ' . $user->email . ', y su número de teléfono es: ' . 
+        $user->phone . '.';
+
+        $admins = $this->userModel->getUsersAdmin(1);
+        foreach ($admins as $a) {
+            $this->model->save($subject, $msg, $a->id);
+        }
+
+        $reply = [
+            'status' => 'ok',
+            'msg' => 'Notificación guardada'
+        ];
+
+        $this->response->response($reply,200);
     }
 }
     

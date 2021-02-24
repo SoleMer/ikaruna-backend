@@ -42,3 +42,6 @@ COMO ADMIN DEBO PODER:
 
 TASKS
 	+generación automática de notificaciones
+	-imágenes a los workshops
+	-solucionar variables $_SESSION[''] que no se guardan
+	-Olvidé mi contraseña

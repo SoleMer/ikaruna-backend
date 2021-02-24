@@ -7,7 +7,7 @@ require_once 'controllers/TherapyController.php';
 require_once 'controllers/WorkshopController.php';
 require_once 'controllers/QuestionController.php';
 
-//define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . dirname($_SERVER['PHP_SELF']) . '/');
+define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . dirname($_SERVER['PHP_SELF']) . '/');
 
 $router = new Router();
 header('Access-Control-Allow-Origin: http://localhost:4200');
@@ -43,11 +43,15 @@ $router->addRoute('workshop', 'GET', 'WorkshopController', 'getAll');
 $router->addRoute('workshop', 'POST', 'WorkshopController', 'add'); 
 $router->addRoute('workshop/:ID', 'DELETE', 'WorkshopController', 'delete');
 $router->addRoute('workshop/:ID', 'PUT', 'WorkshopController', 'edit');
+$router->addRoute('workshopp/:ID', 'PUT', 'WorkshopController', 'addImg');
 
 $router->addRoute('question', 'POST', 'QuestionController', 'add'); 
 $router->addRoute('question', 'GET', 'QuestionController', 'getAllToAdmin'); 
 
-$router->addRoute('notification/:ID', 'GET', 'NotificationController', 'getAll'); 
+$router->addRoute('notification/:ID', 'GET', 'NotificationController', 'getAll');
+$router->addRoute('notification', 'POST', 'NotificationController', 'add');
+$router->addRoute('notification/:ID', 'DELETE', 'NotificationController', 'delete');
+$router->addRoute('notifications/:ID', 'DELETE', 'NotificationController', 'deleteAll');
 
 $router->route($_REQUEST['resource'], $_SERVER['REQUEST_METHOD']);
 ?>

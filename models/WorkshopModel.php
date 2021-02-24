@@ -3,8 +3,29 @@
 class WorkshopModel extends Model{
     
     public function save($name,$caption,$contents,$modality){
-        $query = $this->db->prepare('INSERT INTO workshop (name, caption, contents, modality) VALUES (?, ?, ?, ?)');
+        $query = $this->db->prepare('INSERT INTO workshop (name, caption, contents, modality) VALUES (?, ?, ?,?)');
         return $query->execute([$name, $caption, $contents, $modality]);
+    }
+
+    public function addImg($id, $image, $img_name){
+        $pathImage = null;
+        if($image){
+            $pathImage = $this->uploadImage($image, $img_name);
+        }
+        $query = $this->db->prepare('UPDATE `workshop` SET `image`= ? WHERE `id` = ?');
+        return $query->execute([$pathImage,$id]);
+    }
+
+    private function uploadImage($image, $img_name){
+        $target = BASE_URL . "/assets/workshops/" . $img_name . ".jpg";
+        //$path = BASE_URL . $target ;
+        //file_put_contents($path, $image);
+        move_uploaded_file($image, $target);
+        return $target;
+     /*   $target = 'assets/' . uniqid() . '.jpg';
+        move_uploaded_file($image, $target);
+        return $target;
+        */
     }
     
     public function delete($id){

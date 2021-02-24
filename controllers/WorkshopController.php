@@ -24,8 +24,8 @@ class WorkshopController extends Controller{
                 $caption = $ws->caption;
                 $contents = $ws->contents;
                 $modality = $ws->modality;
-                
-                $success = $this->model->save($name,$caption,$contents,$modality);
+
+                $success = $this->model->save($name,$caption,$contents,$modality);                
 
                 if($success) {
                     $reply = [
@@ -116,6 +116,28 @@ class WorkshopController extends Controller{
                 ];
             }
             $this->response->response($reply, 200);
+    }
+
+    public function addImg($params = []) {
+        $ws_id = $params[':ID'];
+        $img = $_FILES['input_name']['tmp_name'];
+        $img_name =  $_FILES['file']['name'];
+
+        $success = $this->model->addImg($ws_id, $img, $img_name);
+
+        if($success) {
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Imagen guardada.'
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => 'No se pudo guardar la imagen.'
+            ];
+        }
+
+        $this->response->response($reply,200);
     }
 }
 

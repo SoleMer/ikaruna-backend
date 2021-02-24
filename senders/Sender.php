@@ -1,7 +1,11 @@
 <?php
 
+
 include_once('models/UserModel.php');
 include_once('models/TherapyModel.php');
+require_once('PHPMailer/PHPMailerAutoload.php');
+require_once('PHPMailer/class.phpmailer.php');
+require_once('PHPMailer/class.smtp.php');
 
 class Sender{
     //class to send messages notifying users and administrators
@@ -14,43 +18,36 @@ class Sender{
         $this->therapyModel = new TherapyModel;
     }
 
-    public function askShift($shift) {
+    public function askShift($msg) {
         //method of notifying administrators that a user wants a shift
-        $patient = $this->model->getUserById($shift->patient);
-        $therapy = $this->therapyModel->getTherapyById($shift->therapy);
-        
-        $msg = $patient->username .' solicita un turno para '. 
-            $therapy->name .' el día '. $shift->date .' a las '. 
-            $shift->time .'. Email: '. $patient->email .' . Teléfono: '. 
-            $patient->phone 
-        ;   
-        
-        if ($shift->therapist != 0) {
-            $therapist = $this->model->getUserById($shift->therapist);
-            $addressee = $therapist->phone.'@sms.movistar.net.ar';
-            mail($addressee, '', $msg);
-        } else {
-            $therapistOne = $this->model->getUserById(1);
-            $therapistTwo = $this->model->getUserById(2);
-            //TODO: edit this ugly hardcoded! (1, 2)
-            $addresseeOne = $therapistOne->phone.'@sms.movistar.net.ar';
-            $addresseeTwo = $therapistTwo->phone.'@sms.movistar.net.ar';
-            mail($addresseeOne, '', $msg);
-            mail($addresseeTwo, '', $msg);
-        }
+        $gri = $this->model->getByUsername("Gri");
+        $sole = $this->model->getByUsername("Sole");
+        $addresseeGri = $gri->phone.'@sms.movistar.net.ar';
+        $addresseeSole = $sole->phone.'@sms.movistar.net.ar';
+        mail($addresseeGri, '', $msg);
+        mail($addresseeSole, '', $msg);
     }
 
-    public function sendEmailQuestion($question) {
-        $user = $this->model->getUserById($question->user_id);
-        $msg = $user->id .', con e mail '. $user->email .', preguntó: '.
-            $question->text
-        ;
+    public function sendEmailQuestion($question, $user) {
+        $msg = $user->username . ' preguntó: ' . $question->text . '. Su email es :' . 
+        $user->email . ' y su número de teléfono es: ' . $user->phone;
 
-        $addressee = 'soledadmerino.1994@gmail.com';
-        //another hardcoded
-        mail($addressee, 'Ikaruna question', $msg);
-        //TODO: inform the user if their question was submitted
+        $mail = new PHPMailer();
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Host = 'smtp.gmail.com';
+        $mail->Port = '456';
+        $mail->isHTML();
+        $mail->Username = 'soledadmerino.1994@gmail.com';
+        $mail->SetFrom('no-reply@howcode.org');
+        $mail->Subject = 'Question Ikaruna';
+        $mail->Body = $msg;
+        $mail->addAddress('griseldadelcastello@gmail.com');
+
+        $mail->Send();
     }
 }
 
 ?>
+
