@@ -24,7 +24,7 @@ class TherapyController extends Controller{
     }
 
     public function add() {
-        if(1) { //if (AuthHelper::checkAdmin()) {
+        if (AuthHelper::checkAdmin()) {
             $trp = json_decode(file_get_contents("php://input"));
             if (!empty($trp->name) && !empty($trp->description)) {
                 $name = $trp->name;
@@ -54,7 +54,7 @@ class TherapyController extends Controller{
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => session_status(),
+                'msg' => 'Acción no permtida',
             ];
         }
         $this->response->response(json_encode($reply), 200);
@@ -67,23 +67,30 @@ class TherapyController extends Controller{
     }
 
     public function delete($params = []) {
-        $deleted = $this->model->delete($params[':ID']);
-        if($deleted) {
-            $reply = [
-                'status' => 'ok',
-                'msg' => 'Terapia eliminada',
-            ];
+        if(AuthHelper::checkAdmin()) {
+            $deleted = $this->model->delete($params[':ID']);
+            if($deleted) {
+                $reply = [
+                    'status' => 'ok',
+                    'msg' => 'Terapia eliminada',
+                ];
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No se pudo eliminar la terapia. Por favor, intente más tarde',
+                ];
+            }
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'No se pudo eliminar la terapia. Por favor, intente más tarde',
+                'msg' => 'Acción no permitida',
             ];
         }
         $this->response->response($reply, 200);
     }
 
     public function edit($params = []) {
-        if(1) {//if (AuthHelper::checkAdmin()) {
+        if (AuthHelper::checkAdmin()) {
             $id = $params[':ID'];
             $trpDB = $this->model->getTherapyById($id);
             $trp = json_decode(file_get_contents("php://input"));
@@ -118,7 +125,7 @@ class TherapyController extends Controller{
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'Sólo los administradores pueden editar'
+                'msg' => 'Acción no permitida'
             ];
         }
         $this->response->response($reply, 200);

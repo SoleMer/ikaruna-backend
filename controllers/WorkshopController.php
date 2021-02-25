@@ -2,6 +2,7 @@
 
 include_once('models/WorkshopModel.php');
 include_once('response/Response.php');
+include_once('helpers/auth.helper.php');
 
 class WorkshopController extends Controller{
 
@@ -17,7 +18,7 @@ class WorkshopController extends Controller{
 
 
     public function add() {
-        if(1) { //if ($this->check()) {
+        if (AuthHelper::checkAdmin()) {
             $ws = json_decode(file_get_contents("php://input"));
             if (!empty($ws->name) && !empty($ws->contents) && !empty($ws->caption) && !empty($ws->modality)) {
                 $name = $ws->name;
@@ -47,7 +48,7 @@ class WorkshopController extends Controller{
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'Sólo los administradores tienen permiso para agregar'
+                'msg' => 'Acción no permitida'
             ];
         }
 
@@ -55,23 +56,30 @@ class WorkshopController extends Controller{
     }
 
     public function delete($params = []) {
-        $deleted = $this->model->delete($params[':ID']);
-        if($deleted) {
-            $reply = [
-                'status' => 'ok',
-                'msg' => 'Taller eliminado',
-            ];
+        if(AuthHelper::checkAdmin()) {
+            $deleted = $this->model->delete($params[':ID']);
+            if($deleted) {
+                $reply = [
+                    'status' => 'ok',
+                    'msg' => 'Taller eliminado',
+                ];
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No se pudo eliminar el taller. Por favor, intente más tarde',
+                ];
+            }
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'No se pudo eliminar el taller. Por favor, intente más tarde',
+                'msg' => 'Acción no permitda',
             ];
         }
         $this->response->response($reply, 200);
     }
 
     public function edit($params = []) {
-        if(1) { //if (AuthHelper::checkAdmin()) {
+        if (AuthHelper::checkAdmin()) {
             $id = $params[':ID'];
             $ws = json_decode(file_get_contents("php://input"));
             $wsDb= $this->model->getWorkshopById($id);
@@ -118,13 +126,20 @@ class WorkshopController extends Controller{
             $this->response->response($reply, 200);
     }
 
-    public function addImg($params = []) {
+   /* public function addImg($params = []) {
         $ws_id = $params[':ID'];
-        $img = $_FILES['input_name']['tmp_name'];
-        $img_name =  $_FILES['file']['name'];
+        //$img = $_FILES['input_name']['tmp_name'];
+        $archive = json_decode(file_get_contents("php://input"));
+        $img = $archive->file;
+        $img_name =  'ws-' . uniqid();
+
+       /* $reply = [
+            'status' => 'file',
+            'msg' => $img
+        ]; 
 
         $success = $this->model->addImg($ws_id, $img, $img_name);
-
+        
         if($success) {
             $reply = [
                 'status' => 'ok',
@@ -135,10 +150,10 @@ class WorkshopController extends Controller{
                 'status' => 'error',
                 'msg' => 'No se pudo guardar la imagen.'
             ];
-        }
+        } 
 
         $this->response->response($reply,200);
-    }
+    } */
 }
 
 ?>

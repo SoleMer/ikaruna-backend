@@ -4,6 +4,7 @@ include_once('models/QuestionModel.php');
 include_once('senders/Sender.php');
 include_once('response/response.php');
 include_once('controllers/NotificationController.php');
+include_once('helpers/auth.helper.php');
 
 class QuestionController extends Controller {
 
@@ -20,7 +21,7 @@ class QuestionController extends Controller {
     }
 
     public function add() {
-        if(1) { //if (AuthHelper::checkLoggedIn()) {
+        if (AuthHelper::checkLoggedIn()) {
             $question = json_decode(file_get_contents("php://input"));
             if (!empty($question->text)) {
                 $text = $question->text;
@@ -56,7 +57,7 @@ class QuestionController extends Controller {
     }
 
     public function getAllToAdmin() {
-        if(1) {//if ($this->check()) {
+        if (AuthHelper::checkAdmin()) {
             $questions = $this->model->getAll();
             if($questions) {
                 $this->response->response($questions, 200);

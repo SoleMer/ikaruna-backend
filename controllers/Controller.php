@@ -2,6 +2,7 @@
 
 include_once('response/Response.php');
 include_once('cookies.php');
+include_once('helpers/auth.helper.php');
 
 class Controller {
 

@@ -7,6 +7,7 @@ include_once('response/Response.php');
 include_once('models/ShiftModel.php');
 include_once('senders/Sender.php');
 include_once('models/WorkshopModel.php');
+include_once('helpers/auth.helper.php');
 
 class NotificationController extends Controller{
     
@@ -68,14 +69,17 @@ class NotificationController extends Controller{
     }
 
     public function getAll($params = []) {
-        $nots = $this->model->getAll($params[':ID']);
-
-        if($nots) {
-            $this->response->response($nots, 200);
-        } else {
-            
+        $userData = AuthHelper::getUserData();
+        if($userData['id_user'] == $params[':ID']) {
+            $nots = $this->model->getAll($params[':ID']);
+            if($nots) {
+                $this->response->response($nots, 200);
+            } else {
+                $this->response->response(null, 200);
+            }
+        }  else {
             $this->response->response(null, 200);
-        }
+        }   
     }
 
     public function delete($params = []) {
@@ -95,16 +99,24 @@ class NotificationController extends Controller{
     }
 
     public function deleteAll($params = []) {
-        $deleted = $this->model->deleteAll($params[':ID']);
-        if($deleted) {
-            $reply = [
-                'status' => 'ok',
-                'msg' => 'Notificaciones eliminadas',
-            ];
+        $userData = AuthHelper::getUserData();
+        if($params[':ID'] == $userData['id_user']) {
+            $deleted = $this->model->deleteAll($params[':ID']);
+            if($deleted) {
+                $reply = [
+                    'status' => 'ok',
+                    'msg' => 'Notificaciones eliminadas',
+                ];
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No se pudieron eliminar las notificaciones. Por favor, intente más tarde',
+                ];
+            }
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'No se pudieron eliminar las notificaciones. Por favor, intente más tarde',
+                'msg' => 'Acción no permitida',
             ];
         }
         $this->response->response($reply, 200);

@@ -17,7 +17,7 @@ class WorkshopModel extends Model{
     }
 
     private function uploadImage($image, $img_name){
-        $target = BASE_URL . "/assets/workshops/" . $img_name . ".jpg";
+        $target = 'uploads/workshops/' . $img_name . ".jpg";
         //$path = BASE_URL . $target ;
         //file_put_contents($path, $image);
         move_uploaded_file($image, $target);

@@ -9,12 +9,10 @@ class UserController extends Controller{
 
     private $model;
     protected $response;
-    private $isAdmin;
 
     public function __construct() {
         $this->model = new UserModel;
         $this->response = new Response();
-        $this->isAdmin = AuthHelper::checkAdmin();
     }
 
     public function login($user) {
@@ -47,7 +45,7 @@ class UserController extends Controller{
     }
 
     public function verify(){
-        if (session_status() == 'PHP_SESSION_ACTIVE') {
+        if (AuthHelper::checkLoggedIn()) {
             $reply = [
                 'status' => 'error',
                 'msg' => 'Ya hay una sesión activa. Cerrar sesión para iniciar una nueva',
@@ -186,7 +184,7 @@ class UserController extends Controller{
     }
 
     public function getAll() {
-        if(1) {//if (AuthHelper::checkAdmin()) {
+        if (AuthHelper::checkAdmin()) {
             $users = $this->model->getAll();
             if($users) {
                 $this->response->response($users, 200);
@@ -200,45 +198,39 @@ class UserController extends Controller{
     }
 
     public function getById($params = []) {
-        $user = $this->model->getUserById($params[':ID']);
-        if($user) {
-            $this->response->response($user, 200);
-        } else {
-            $this->response->response(null, 404);
+        $userData = AuthHelper::getUserData();
+        $id = $params[':ID'];
+        if($userData['id_user'] == $id) {
+            $user = $this->model->getUserById($id);
+            if($user) {
+                $this->response->response($user, 200);
+            } else {
+                $this->response->response(null, 404);
+            }
         }
     }
 
     public function delete($params = []) {
-        $deleted = $this->model->delete($params[':ID']);
-        if($deleted) {
-            $reply = [
-                'status' => 'ok',
-                'msg' => 'Usuario eliminado',
-            ];
+        if(AuthHelper::checkAdmin()) {
+            $deleted = $this->model->delete($params[':ID']);
+            if($deleted) {
+                $reply = [
+                    'status' => 'ok',
+                    'msg' => 'Usuario eliminado',
+                ];
+            } else {
+                $reply = [
+                    'status' => 'error',
+                    'msg' => 'No se pudo eliminar el usuario. Por favor, intente más tarde',
+                ];
+            }
         } else {
             $reply = [
                 'status' => 'error',
-                'msg' => 'No se pudo eliminar el usuario. Por favor, intente más tarde',
+                'msg' => 'No es posible eliminar usuarios.',
             ];
         }
         $this->response->response($reply, 200);
-    }
-
-    public static function checkAdmin(){
-        session_start();
-        return $_SESSION['ADMIN'];
-        /*
-        if(isset($_SESSION['ADMIN']))
-            return $_SESSION['ADMIN'];
-        else
-        return null;
-        */
-    }
-
-    static private function start()
-    {
-        if (session_status() != PHP_SESSION_ACTIVE)
-            session_start();
     }
 }
 

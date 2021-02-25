@@ -6,6 +6,8 @@ require_once 'controllers/ShiftController.php';
 require_once 'controllers/TherapyController.php';
 require_once 'controllers/WorkshopController.php';
 require_once 'controllers/QuestionController.php';
+require_once 'controllers/NotificationController.php';
+include_once('helpers/auth.helper.php');
 
 define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . dirname($_SERVER['PHP_SELF']) . '/');
 
