@@ -1,1 +1,1 @@
-web: vendor/bin/heroku-php-apache2 routerAPI
+web: vendor/bin/heroku-php-apache2 routerAPI.php
