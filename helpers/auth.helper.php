@@ -1,5 +1,6 @@
 <?php
 class AuthHelper {
+    
     static private function start()
     {
         if (session_status() != PHP_SESSION_ACTIVE)
@@ -7,7 +8,9 @@ class AuthHelper {
     }
 
     static public function login($id,$username,$email,$admin, $token){
-        AuthHelper::start();
+        //ini_set("session.cookie_lifetime","7200");
+        //ini_set("session.gc_maxlifetime","7200");
+        self::start();
         $_SESSION['ID_USER'] = $id;
         $_SESSION['USERNAME'] = $username;
         $_SESSION['EMAIL'] = $email;
@@ -16,7 +19,8 @@ class AuthHelper {
     }
 
     public static function checkLoggedIn(){
-        self::start();
+        //self::start();
+        session_start();
         if(!empty($_SESSION['USERNAME'])){
             return true;
         }
@@ -26,7 +30,8 @@ class AuthHelper {
     }
 
     public static function getUserData(){
-        self::start();
+        //self::start();
+        session_start();
         if (!isset($_SESSION['USERNAME']))
             return null;
         else {
@@ -38,7 +43,8 @@ class AuthHelper {
     }
 
     public static function checkAdmin(){
-        self::start();
+        //self::start();
+        session_start();
         if(!empty($_SESSION['ADMIN']))
             return $_SESSION['ADMIN'];
         else
@@ -47,7 +53,8 @@ class AuthHelper {
 
     public static function logout()
     {
-        self::start();
+        //self::start();
+        session_start();
         unset($_SESSION['ID_USER']);
         unset($_SESSION['USERNAME']);
         unset($_SESSION['PRIORITY']);
