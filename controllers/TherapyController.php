@@ -8,10 +8,12 @@ class TherapyController extends Controller{
 
     private $model;
     protected $response;
+    private $auth;
 
     public function __construct() {
         $this->model = new TherapyModel();
         $this->response= new Response();
+        $this->auth = new AuthHelper;
     }
 
     public function getAll() {
@@ -24,7 +26,7 @@ class TherapyController extends Controller{
     }
 
     public function add() {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $trp = json_decode(file_get_contents("php://input"));
             if (!empty($trp->name) && !empty($trp->description)) {
                 $name = $trp->name;
@@ -67,7 +69,7 @@ class TherapyController extends Controller{
     }
 
     public function delete($params = []) {
-        if(AuthHelper::checkAdmin()) {
+        if($this->auth->checkAdmin()) {
             $deleted = $this->model->delete($params[':ID']);
             if($deleted) {
                 $reply = [
@@ -90,7 +92,7 @@ class TherapyController extends Controller{
     }
 
     public function edit($params = []) {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $id = $params[':ID'];
             $trpDB = $this->model->getTherapyById($id);
             $trp = json_decode(file_get_contents("php://input"));

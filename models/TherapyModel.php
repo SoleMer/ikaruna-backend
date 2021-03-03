@@ -5,7 +5,7 @@ include_once('Model.php');
 class TherapyModel extends Model {
 
     public function getAll() {
-        $query = $this->db->prepare('SELECT therapy.*, user.username FROM therapy LEFT JOIN user ON therapy.therapist_id = user.id');
+        $query = $this->db->prepare('SELECT therapy.*, user.username FROM therapy LEFT JOIN user ON therapy.therapist_id = user.id ORDER BY id ASC');
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
     }

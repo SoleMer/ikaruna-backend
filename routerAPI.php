@@ -1,5 +1,5 @@
 <?php
-
+//S?S,y3#uD4.C.M8
 require_once 'libs/router/Router.php';
 require_once 'controllers/UserController.php';
 require_once 'controllers/ShiftController.php';
@@ -9,12 +9,15 @@ require_once 'controllers/QuestionController.php';
 require_once 'controllers/NotificationController.php';
 include_once('helpers/auth.helper.php');
 
-define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . dirname($_SERVER['PHP_SELF']) . '/');
-
-$router = new Router();
-header('Access-Control-Allow-Origin: http://localhost:4200');
+/*header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header("Content-Type: application/javascript");
+header("Cookies': _test=31be990d9a58de15e0bc20f93d197d02; expires=Thu, 31-Dec- 2037 20:55:55 GTM; path=/");
+*/
+//define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . dirname($_SERVER['PHP_SELF']) . '/');
+define('BASE_URL', '//' . $_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']) . '/');
+$router = new Router();
 
 //$router->addRoute('recurso', 'verbo', 'controlador', 'funcion');
 
@@ -26,8 +29,9 @@ $router->addRoute('user/:ID', 'PUT', 'UserController', 'edit');
 
 $router->addRoute('admin/', 'GET', 'UserController', 'getTherapist');
 
-$router->addRoute('login', 'POST', 'UserController', 'verify'); 
-$router->addRoute('logout', 'DELETE', 'UserController', 'logout'); 
+$router->addRoute('log', 'POST', 'UserController', 'verify'); 
+$router->addRoute('log/:ID', 'DELETE', 'UserController', 'logout'); 
+$router->addRoute('log', 'GET', 'UserController', 'checkSession'); 
 
 $router->addRoute('shift', 'POST', 'ShiftController', 'add');
 $router->addRoute('shift/:ID', 'PUT', 'ShiftController', 'confirm');

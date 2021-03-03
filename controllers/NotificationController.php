@@ -5,7 +5,6 @@ include_once('models/UserModel.php');
 include_once('models/TherapyModel.php');
 include_once('response/Response.php');
 include_once('models/ShiftModel.php');
-include_once('senders/Sender.php');
 include_once('models/WorkshopModel.php');
 include_once('helpers/auth.helper.php');
 
@@ -16,8 +15,8 @@ class NotificationController extends Controller{
     private $trpModel;
     protected $response;
     private $shiftModel;
-    private $sender;
     private $wsModel;
+    private $auth;
 
     public function __construct() {
         $this->model = new NotificationModel;
@@ -25,8 +24,8 @@ class NotificationController extends Controller{
         $this->trpModel = new TherapyModel;
         $this->response = new Response;
         $this->shiftModel = new ShiftModel;
-        $this->sender = new Sender;
         $this->wsModel = new WorkshopModel;
+        $this->auth = new AuthHelper;
     }
 
     public function notifyShiftRequest($shift, $date) {
@@ -40,7 +39,6 @@ class NotificationController extends Controller{
         foreach ($admins as $a) {
             $this->model->save($subject, $msg, $a->id);
         }
-        //$this->sender->askShift($msg);
     }
 
     public function notifyShiftAccepted($shift_id) {
@@ -65,12 +63,11 @@ class NotificationController extends Controller{
             $this->model->save($subject, $msg, $a->id);
         }
 
-        //$this->sender->sendEmailQuestion($question, $user);
     }
 
     public function getAll($params = []) {
-        $userData = AuthHelper::getUserData();
-        if($userData['id_user'] == $params[':ID']) {
+        $userData = $this->auth->getUserId();
+        if($userData == $params[':ID']) {
             $nots = $this->model->getAll($params[':ID']);
             if($nots) {
                 $this->response->response($nots, 200);
@@ -99,8 +96,8 @@ class NotificationController extends Controller{
     }
 
     public function deleteAll($params = []) {
-        $userData = AuthHelper::getUserData();
-        if($params[':ID'] == $userData['id_user']) {
+        $userData = $this->auth->getUserId();
+        if($params[':ID'] == $userData) {
             $deleted = $this->model->deleteAll($params[':ID']);
             if($deleted) {
                 $reply = [

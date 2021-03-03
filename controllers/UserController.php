@@ -9,49 +9,82 @@ class UserController extends Controller{
 
     private $model;
     protected $response;
+    private $auth;
 
     public function __construct() {
         $this->model = new UserModel;
         $this->response = new Response();
+        $this->auth = new AuthHelper;
+    }
+
+    public function checkSession() {
+        if ($this->auth->checkLoggedIn()) {
+            $id = $this->auth->getUserId();
+            $admin = $this->auth->checkAdmin();
+            $reply = [
+                'status' => 'ok',
+                'msg' => 'Session activa',
+                'token' => '0',
+                'id_user' => $id,
+                'isAdmin' => $admin
+            ];
+        } else {
+            $reply = [
+                'status' => 'not',
+                'msg' => 'No hay session iniciada',
+                'token' => '0',
+                'id_user' => '0',
+                'isAdmin' => '0'
+            ];
+        }
+        $this->response->response($reply, 200);
     }
 
     public function login($user) {
          //   session_set_cookie_params(time()+(60*60*24*31), "/", "http://localhost", false, false);
             $token = sha1(uniqid(rand(),true));
-            AuthHelper::login($user->id, $user->username, $user->email, $user->admin, $token);
-        /*    $_SESSION['ID_USER'] = $user->id;
-            $_SESSION['USERNAME'] = $user->username;
-            $_SESSION['EMAIL'] = $user->email;
-            $_SESSION['ADMIN'] = $user->admin;
-            $_SESSION['TOKEN'] = $token;
-            setcookie("token", $token, time()+(60*60*24*31),"/");
-            setcookie("id", $user->id, time()+(60*60*24*31),"/");
-            setcookie("admin", $user->admin, time()+(60*60*24*31),"/");
-        */    
+            $this->auth->login($user);
             
             $reply = [
                 'status' => 'ok',
-                'msg' => "Sesión iniciada",
+                'msg' => "Sesion iniciada",
                 'token' => $token,
-                'id_user' => $_SESSION['ID_USER'],
+                'id_user' => $user->id,
                 'isAdmin' => $user->admin     
             ];
         return $reply;
     }
     
-    public function logout() {
-        session_start();
-        session_destroy();
+    public function logout($params = []) {
+        $id = $params[':ID'];
+        $deleted = $this->auth->logout($id);
+
+        if($deleted) {
+            $reply = [
+                'status' => 'closed',
+                'msg' => "Cierre de session exitoso",
+                'token' => 0,
+                'id_user' => 0,
+                'isAdmin' => 0     
+            ];
+        } else {
+            $reply = [
+                'status' => 'error',
+                'msg' => "No se pudo cerrar la session"
+            ];
+        }
+        $this->response->response($reply, 200);
     }
 
     public function verify(){
-        if (AuthHelper::checkLoggedIn()) {
+        $logged = $this->auth->checkLoggedIn();
+        if ($logged) {
             $reply = [
-                'status' => 'error',
+                'status' => 'ok',
                 'msg' => 'Ya hay una sesión activa. Cerrar sesión para iniciar una nueva',
                 'token' => '0',
-                'id_user' => '0',
-                'isAdmin' => '0'
+                'id_user' => $logged->user,
+                'isAdmin' => $logged->admin
             ];
         } else {
 
@@ -184,7 +217,7 @@ class UserController extends Controller{
     }
 
     public function getAll() {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $users = $this->model->getAll();
             if($users) {
                 $this->response->response($users, 200);
@@ -198,9 +231,9 @@ class UserController extends Controller{
     }
 
     public function getById($params = []) {
-        $userData = AuthHelper::getUserData();
+        $userData = $this->auth->getUserId();
         $id = $params[':ID'];
-        if($userData['id_user'] == $id) {
+        if($userData == $id) {
             $user = $this->model->getUserById($id);
             if($user) {
                 $this->response->response($user, 200);
@@ -211,7 +244,7 @@ class UserController extends Controller{
     }
 
     public function delete($params = []) {
-        if(AuthHelper::checkAdmin()) {
+        if($this->auth->checkAdmin()) {
             $deleted = $this->model->delete($params[':ID']);
             if($deleted) {
                 $reply = [

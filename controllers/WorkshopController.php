@@ -8,17 +8,18 @@ class WorkshopController extends Controller{
 
     protected $model;
     protected $response;
-
+    private $auth;
 
     public function __construct() {
         $this->model = new WorkshopModel;
         $this->response= new Response();
+        $this->auth = new AuthHelper;
     }
 
 
 
     public function add() {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $ws = json_decode(file_get_contents("php://input"));
             if (!empty($ws->name) && !empty($ws->contents) && !empty($ws->caption) && !empty($ws->modality)) {
                 $name = $ws->name;
@@ -56,7 +57,7 @@ class WorkshopController extends Controller{
     }
 
     public function delete($params = []) {
-        if(AuthHelper::checkAdmin()) {
+        if($this->auth->checkAdmin()) {
             $deleted = $this->model->delete($params[':ID']);
             if($deleted) {
                 $reply = [
@@ -79,7 +80,7 @@ class WorkshopController extends Controller{
     }
 
     public function edit($params = []) {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $id = $params[':ID'];
             $ws = json_decode(file_get_contents("php://input"));
             $wsDb= $this->model->getWorkshopById($id);

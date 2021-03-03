@@ -1,9 +1,8 @@
 <?php
 
 include_once('models/ShiftModel.php');
-include_once('senders/Sender.php');
 include_once('controllers/Controller.php');
-include_once('response/response.php');
+include_once('response/Response.php');
 include_once('models/UserModel.php');
 include_once('controllers/NotificationController.php');
 include_once('helpers/auth.helper.php');
@@ -12,16 +11,16 @@ class ShiftController extends Controller {
 
     private $model; 
     protected $response;
-    private $sender;
     private $userModel;
     private $notifications;
+    private $auth;
 
     public function __construct() {
         $this->model = new ShiftModel;
         $this->response = new response();
-        $this->sender = new Sender;
         $this->userModel = new UserModel;
         $this->notifications = new NotificationController;
+        $this->auth = new AuthHelper;
     }
 
     public function add() {
@@ -55,11 +54,6 @@ class ShiftController extends Controller {
                     'msg' => 'No se pudo guardar el turno. Intente más tarde'
                 ];
             }
-                /*
-                if ($status == 0) {
-                    $this->sender->askShift($shift);
-                } 
-                */
         } else {
             $reply = [
                 'status' => 'error',
@@ -70,7 +64,7 @@ class ShiftController extends Controller {
     }
 
     public function delete($params = []) {
-        if(AuthHelper::checkAdmin()) {
+        if($this->auth->checkAdmin()) {
             $deleted = $this->model->delete($params[':ID']);
             if($deleted) {
                 $reply = [
@@ -93,7 +87,7 @@ class ShiftController extends Controller {
     }
 
     public function confirm($params = []) {
-        if(AuthHelper::checkAdmin()){
+        if($this->auth->checkAdmin()){
             $id = $params[':ID'];
             $success = $this->model->confirmShift($params[':ID']);
 
@@ -119,7 +113,7 @@ class ShiftController extends Controller {
     }
 
     public function getAll() {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $shifts = $this->model->getAll();
             if($shifts) {
                 $this->response->response($shifts, 200);
@@ -141,8 +135,8 @@ class ShiftController extends Controller {
     }
 
     public function getUserShifts($params = []) {
-        $userData = AuthHelper::getUserData();
-        if ($params[':ID'] == $userData['id_user']) { //CHEQUEAR QUE EL USER QUE SOLICITA SEA EL QUE TIENELA SESION INICIADA
+        $userData = $this->auth->getUserId();
+        if ($params[':ID'] == $userData) { //CHEQUEAR QUE EL USER QUE SOLICITA SEA EL QUE TIENELA SESION INICIADA
             $shifts = $this->model->getByUserId($params[':ID']);
             if($shifts) {
                 $this->response->response($shifts, 200);

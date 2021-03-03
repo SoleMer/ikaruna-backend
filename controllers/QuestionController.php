@@ -1,27 +1,26 @@
 <?php
  
 include_once('models/QuestionModel.php');
-include_once('senders/Sender.php');
-include_once('response/response.php');
+include_once('response/Response.php');
 include_once('controllers/NotificationController.php');
 include_once('helpers/auth.helper.php');
 
 class QuestionController extends Controller {
 
     private $model;
-    private $sender;
     protected $response;
     private $notification;
+    private $auth;
 
     public function __construct() {
         $this->model = new QuestionModel;
-        $this->sender = new Sender;
         $this->response = new Response();
         $this->notification = new NotificationController;
+        $this->auth = new AuthHelper;
     }
 
     public function add() {
-        if (AuthHelper::checkLoggedIn()) {
+        if ($this->auth->checkLoggedIn()) {
             $question = json_decode(file_get_contents("php://input"));
             if (!empty($question->text)) {
                 $text = $question->text;
@@ -34,7 +33,6 @@ class QuestionController extends Controller {
                         'status' => 'ok',
                         'msg' => 'Pregunta guardada'
                     ];
-                    //$this->sender->sendEmailQuestion($question);
                 } else {
                     $reply = [
                         'status' => 'error',
@@ -57,7 +55,7 @@ class QuestionController extends Controller {
     }
 
     public function getAllToAdmin() {
-        if (AuthHelper::checkAdmin()) {
+        if ($this->auth->checkAdmin()) {
             $questions = $this->model->getAll();
             if($questions) {
                 $this->response->response($questions, 200);

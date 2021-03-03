@@ -3,7 +3,7 @@
 class QuestionModel extends Model{
  
     public function getAll() {
-        $query = $this->db->prepare('SELECT question.*, user.username, user.email  FROM question LEFT JOIN user ON question.user_id = user.id');
+        $query = $this->db->prepare('SELECT question.*, user.username, user.email  FROM question LEFT JOIN user ON question.user_id = user.id ORDER BY id DESC');
         $query->execute();
         return $query->fetchAll(PDO::FETCH_OBJ);
     }

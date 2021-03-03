@@ -1,26 +1,43 @@
 <?php
-class AuthHelper {
-    
-    static private function start()
-    {
-        if (session_status() != PHP_SESSION_ACTIVE)
-            session_start();
-    }
+/*
+session_save_path("tmp/files");
+ini_set('session.gc_probability', 1);
+if (session_status() != PHP_SESSION_ACTIVE) {
+    session_name('PSPSESSID');
+    session_start();
+}
 
-    static public function login($id,$username,$email,$admin, $token){
-        //ini_set("session.cookie_lifetime","7200");
-        //ini_set("session.gc_maxlifetime","7200");
-        self::start();
+class Auth {
+    
+    private static $user_id;
+    private static $is_admin;
+    private static $username;
+    private static $email;
+
+    static private function start(){
+        if (session_status() != 'PHP_SESSION_ACTIVE') {
+            session_start();
+        }
+    }
+    
+    public static function login($id,$username,$email,$admin, $token){
+        //self::start();
+        //session_start();
         $_SESSION['ID_USER'] = $id;
         $_SESSION['USERNAME'] = $username;
         $_SESSION['EMAIL'] = $email;
         $_SESSION['ADMIN'] = $admin;
-        $_SESSION['TOKEN'] = $token;
+        $_SESSION['TOKEN'] = $token;    
+        /*self::$user_id = $id;
+        self::$username = $username;
+        self::$email = $email;
+        self::$is_admin = $admin;
+        $_SESSION['ADMIN'] = $admin;
     }
 
     public static function checkLoggedIn(){
         //self::start();
-        session_start();
+        //session_start();
         if(!empty($_SESSION['USERNAME'])){
             return true;
         }
@@ -31,13 +48,16 @@ class AuthHelper {
 
     public static function getUserData(){
         //self::start();
-        session_start();
+        //session_start();
         if (!isset($_SESSION['USERNAME']))
             return null;
         else {
-            $userData['id_user'] = $_SESSION['ID_USER'];
+            /*$userData['id_user'] = $_SESSION['ID_USER'];
             $userData['userName'] = $_SESSION['USERNAME'];
             $userData['admin'] = $_SESSION['ADMIN'];
+            $userData['id_user'] = self::$user_id;
+            $userData['userName'] = self::$username;
+            $userData['admin'] = self::$is_admin;
             return  $userData;
         }
     }
@@ -45,10 +65,11 @@ class AuthHelper {
     public static function checkAdmin(){
         //self::start();
         session_start();
-        if(!empty($_SESSION['ADMIN']))
-            return $_SESSION['ADMIN'];
+        /*if(!empty(self::$is_admin))
+            return self::$is_admin;
         else
         return null;
+        return $_SESSION['ADMIN'];
     }
 
     public static function logout()
@@ -57,7 +78,7 @@ class AuthHelper {
         session_start();
         unset($_SESSION['ID_USER']);
         unset($_SESSION['USERNAME']);
-        unset($_SESSION['PRIORITY']);
+        unset($_SESSION['ADMIN']);
         session_destroy();
     }
     
@@ -71,5 +92,91 @@ class AuthHelper {
     }
     
     
-}
+}*/
 ?> 
+
+<?php
+include_once('models/Model.php');
+
+class AuthHelper extends Model{
+
+    private static function getIP(){
+        if($_SERVER['HTTP_CLIENT_IP'])
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        else if($_SERVER['HTTP_X_FORWARDED_FOR'])
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if($_SERVER['HTTP_X_FORWARDED'])
+            $ip = $_SERVER['HTTP_X_FORWARDED'];
+        else if($_SERVER['HTTP_FORWARDED_FOR'])
+            $ip = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if($_SERVER['HTTP_FORWARDED'])
+            $ip = $_SERVER['HTTP_FORWARDED'];
+        else if($_SERVER['REMOTE_ADDR'])
+            $ip = $_SERVER['REMOTE_ADDR'];
+
+        return $ip;
+    }
+
+    public function login($user) {
+        $ip = self::getIP();
+        $user_id = $user->id;
+        $is_admin = $user->admin;
+
+        $query = $this->db->prepare('INSERT INTO session (ip, user, admin) VALUES (?, ?, ?)');
+        return $query->execute([$ip, $user_id, $is_admin]);
+    }
+
+    public function checkLoggedIn() {
+        $ip = self::getIP();
+
+        $query = $this->db->prepare('SELECT * FROM `session` WHERE ip = ?');
+        $query->execute(array(($ip)));
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function checkAdmin() {
+        $ip = self::getIP();
+
+        $query = $this->db->prepare('SELECT * FROM `session` WHERE ip = ?');
+        $query->execute(array(($ip)));
+        $session = $query->fetch(PDO::FETCH_OBJ);
+
+        if($session) {
+            return $session->admin;
+        }
+        return null;
+    }
+
+    public function getUserId() {
+        $ip = self::getIP();
+
+        $query = $this->db->prepare('SELECT * FROM `session` WHERE ip = ?');
+        $query->execute(array(($ip)));
+        $session = $query->fetch(PDO::FETCH_OBJ);
+
+        if($session) {
+            return $session->user;
+        }
+        return null;
+    }
+
+    public function getSession($ip) {
+        $query = $this->db->prepare('SELECT * FROM `session` WHERE ip = ?');
+        $query->execute(array(($ip)));
+        return $query->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function logout($idUser){
+        $ip = self::getIP();
+        $session = $this->getSession($ip);
+        $id = $session->id;
+
+        if($idUser = $session->user) {
+            $query = $this->db->prepare('DELETE FROM `session` WHERE `id`= ?');
+            return $query->execute([$id]);
+        }
+        return null;
+    }
+}
+
+?>
