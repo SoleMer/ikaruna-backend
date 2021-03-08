@@ -112,18 +112,34 @@ class AuthHelper extends Model{
         else if($_SERVER['HTTP_FORWARDED'])
             $ip = $_SERVER['HTTP_FORWARDED'];
         else if($_SERVER['REMOTE_ADDR'])
-            $ip = $_SERVER['REMOTE_ADDR'];
+            $ip = $_SERVER['REMOTE_ADDR'];  
 
         return $ip;
     }
 
+    private static function getHost() {
+        if($_SERVER['REMOTE_HOST'])
+            $host = $_SERVER['REMOTE_HOST'];  
+
+        return $host;
+    }
+
+    private static function getPort() {
+        if($_SERVER['REMOTE_PORT'])
+            $port = $_SERVER['REMOTE_PORT'];  
+
+        return $port;
+    }
+
     public function login($user) {
         $ip = self::getIP();
+        //$host = self::getHost();
+        $port = self::getPort();
         $user_id = $user->id;
         $is_admin = $user->admin;
 
-        $query = $this->db->prepare('INSERT INTO session (ip, user, admin) VALUES (?, ?, ?)');
-        return $query->execute([$ip, $user_id, $is_admin]);
+        $query = $this->db->prepare('INSERT INTO session (ip, port, user, admin) VALUES (?, ?, ?, ?)');
+        return $query->execute([$ip, $port, $user_id, $is_admin]);
     }
 
     public function checkLoggedIn() {
@@ -132,6 +148,7 @@ class AuthHelper extends Model{
         $query = $this->db->prepare('SELECT * FROM `session` WHERE ip = ?');
         $query->execute(array(($ip)));
         return $query->fetch(PDO::FETCH_OBJ);
+
     }
 
     public function checkAdmin() {

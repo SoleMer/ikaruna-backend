@@ -2,8 +2,12 @@
 	RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
+    RewriteEngine On
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+    Header always set Content-Security-Policy "upgrade-insecure-requests;"
     RewriteRule \.(?:css|js|jpe?g|gif|png)$ - [L]
-    RewriteRule ^api/(.*)$ routerAPI.php?resource=$1 [QSA,L,END]
+    RewriteRule ^api/(.*)$ index.php?resource=$1 [QSA,L,END]
     RewriteRule ^(.*)$ router.php?action=$1 [QSA,L]
     php_value session.gc_maxlifetime 7200
     php_value session.cookie_lifetime 7200

@@ -16,8 +16,6 @@ class WorkshopController extends Controller{
         $this->auth = new AuthHelper;
     }
 
-
-
     public function add() {
         if ($this->auth->checkAdmin()) {
             $ws = json_decode(file_get_contents("php://input"));

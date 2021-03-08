@@ -43,8 +43,9 @@ class UserController extends Controller{
     public function login($user) {
          //   session_set_cookie_params(time()+(60*60*24*31), "/", "http://localhost", false, false);
             $token = sha1(uniqid(rand(),true));
-            $this->auth->login($user);
+            $session = $this->auth->login($user);
             
+            if($session) {
             $reply = [
                 'status' => 'ok',
                 'msg' => "Sesion iniciada",
@@ -52,6 +53,7 @@ class UserController extends Controller{
                 'id_user' => $user->id,
                 'isAdmin' => $user->admin     
             ];
+        }
         return $reply;
     }
     
